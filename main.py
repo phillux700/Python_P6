@@ -1,3 +1,16 @@
+##########################################################
+# TITLE       : 3-2-1 Backup Rule
+# DESCRIPTION :
+    # - Sauvegarde wordpress/sql en local
+    # - Sauvegarde wordpress/sql sur site distant
+    # - Sauvegarde wordpress/sql sur AWS
+    # - Restauration wordpress/sql depuis local
+    # - Restauration wordpress/sql depuis site distant
+    # - Restauration wordpress/sql AWS
+# AUTHORS     : PHILIPPE TRAON
+# DATE        : 31/08/2021
+# REPO        : https://github.com/sergisergio/P6
+##########################################################
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -8,8 +21,27 @@ import time
 import shutil
 import tarfile
 
+############### DOCUMENTATION ####################
+# https://docs.python.org/fr/3/library/os.html
+# https://docs.python.org/fr/3/library/sys.html
+# https://docs.python.org/fr/3/library/datetime.html
+# https://docs.python.org/fr/3/library/time.html
+# https://docs.python.org/fr/3/library/shutil.html
+# https://docs.python.org/fr/3/library/tarfile.html
+##################################################
+
+# --- Variables --- #
 date = datetime.datetime.now().strftime('%Y%m%d-%s')
 f_date = datetime.datetime.now().strftime('%Y%m%d')
+backup_path = '/home/philippe/P6/backup/'
+source_directory = '/var/www/wordpress'
+todays_date = (time.strftime("%d-%m-%Y"))
+free_space_needed = 1000000
+backup_site_name = 'wordpress'
+database_name = 'wordpress_db'
+target_dir = '/home/philippe/P6/backup/'
+username = 'philippe'
+password = 'password'
 
 # Permet de connaître le répertoire courant
 def currentDir():
@@ -25,20 +57,16 @@ def banner():
  \033[0m"""
     return banner
 
-# --- Variables --- #
-backup_path = '/home/philippe/P6/backup/'
-source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%d-%m-%Y"))
-free_space_needed = 1000000
-backup_site_name = 'wordpress'
-database_name = 'wordpress_db'
-target_dir = '/home/philippe/P6/backup/'
-username = 'philippe'
-password = 'password'
-
 def local_backup():
     os.system("tar -zcvf " + target_dir + todays_date + backup_site_name + ".tar.gz " + source_directory)
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + target_dir + todays_date + database_name + ".sql")
+
+def remote_backup():
+    print("remote")
+
+def aws_backup():
+    print("aws")
+
 
 
 # Affichage du menu
@@ -68,6 +96,16 @@ choice = input(show_input())
 
 if choice == "1":
     local_backup()
+elif choice == "2":
+    remote_backup()
+elif choice == "3":
+    aws_backup()
+elif choice == "4":
+    aws_backup()
+elif choice == "5":
+    aws_backup()
+elif choice == "6":
+    aws_backup()
 elif choice == "7":
     currentDir()
 elif choice == "0":
