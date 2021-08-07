@@ -38,7 +38,7 @@ password = 'password'
 
 def local_backup():
     os.system("tar -zcvf " + target_dir + todays_date + backup_site_name + ".tar.gz " + source_directory)
-    os.system("mysqldump -u " + database_name + " -p" + password + " " + database_name + "  > " + target_dir + todays_date + database_name + ".sql")
+    os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + target_dir + todays_date + database_name + ".sql")
 
 
 # Affichage du menu
