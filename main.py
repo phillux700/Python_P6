@@ -24,6 +24,11 @@ def banner():
     return banner
 
 def local_backup():
+    archive_path = "%s" % date
+    os.mkdir(archive_path, 755)
+    src_file = "%s.sql.gz" % f_date
+    dst = "%s" % date
+    shutil.move(src_file, dst)
     output_filename_1 = "%s.html_dir" % f_date
     output_filename_2 = "%s.html_dir.zip" % f_date
     dir_name = '/var/www/wordpress'
