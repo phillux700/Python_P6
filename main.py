@@ -26,13 +26,13 @@ def banner():
     return banner
 
 # --- Variables --- #
-backup_path = '/home/philippe/P6/backup'
+backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
 todays_date = (time.strftime("%d-%m-%Y"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
-target_dir = '/home/philippe/P6/backup'
+target_dir = '/home/philippe/P6/backup/'
 username = 'philippe'
 password = 'password'
 
