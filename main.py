@@ -25,10 +25,11 @@ def menu():
    [1]--Local (first rule)
    [2]--Distant (second rule)
    [3]--AWS S3 Bucket (third rule)
-   [4]--Restore from Local
-   [5]--Restore from Distant
-   [6]--Restore from AWS
-   [7]--Return current directory
+   [4]--3 rules
+   [5]--Restore from Local
+   [6]--Restore from Distant
+   [7]--Restore from AWS
+   [8]--Return current directory
    [0]--Exit
    \033[0m
  """)
@@ -37,7 +38,7 @@ def show_info(info):
     print('\033[31m' + info + '\033[31m')
 
 def show_input():
-    return "{0}cisco~# {1}".format('\033[31m', '\033[0m')
+    return "{0}P6~# {1}".format('\033[31m', '\033[0m')
 
 menu()
 choice = input(show_input())
@@ -48,7 +49,7 @@ elif choice == "0":
     os.system('clear'), sys.exit()
 elif choice == "":
     menu()
-elif not int(choice) in range(0, 8):
+elif not int(choice) in range(0, 9):
     menu()
     show_info("Choix indisponible !")
     sys.exit()
