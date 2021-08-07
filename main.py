@@ -14,3 +14,19 @@ def banner():
                                          |_|                    
  \033[0m"""
     return banner
+
+# Affichage du menu
+def menu():
+    print (banner() + """\033[96m
+ [*] Manage your backup [*]
+   [1]--Local (first rule)
+   [2]--Distant (second rule)
+   [3]--AWS S3 Bucket (third rule)
+   [4]--Restore from Local
+   [5]--Restore from Distant
+   [6]--Restore from AWS
+   [0]--Exit
+   \033[0m
+ """)
+
+menu()
