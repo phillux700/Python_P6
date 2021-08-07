@@ -32,7 +32,7 @@ todays_date = (time.strftime("%d-%m-%Y"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
-target_dir = '/home/philippe/P6/dir1/'
+target_dir = '/home/philippe/P6/backup'
 username = 'philippe'
 password = 'password'
 
