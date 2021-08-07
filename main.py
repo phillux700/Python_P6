@@ -3,6 +3,11 @@
 
 import os
 import sys
+import datetime
+import shutil
+
+date = datetime.datetime.now().strftime('%Y%m%d-%s')
+f_date = datetime.datetime.now().strftime('%Y%m%d')
 
 # Permet de connaître le répertoire courant
 def currentDir():
@@ -18,12 +23,20 @@ def banner():
  \033[0m"""
     return banner
 
+def local_backup():
+    output_filename_1 = "%s.html_dir" % f_date
+    output_filename_2 = "%s.html_dir.zip" % f_date
+    dir_name = '/var/www/wordpress'
+    dst = "%s" % date
+    shutil.make_archive(output_filename_1, 'zip', dir_name)
+    shutil.move(output_filename_2, dst)
+
 # Affichage du menu
 def menu():
     print (banner() + """\033[96m
  [*] Manage your backup [*]
    [1]--Local (first rule)
-   [2]--Distant (second rule)
+   [2]--Remote (second rule)
    [3]--AWS S3 Bucket (third rule)
    [4]--3 rules
    [5]--Restore from Local
@@ -43,7 +56,9 @@ def show_input():
 menu()
 choice = input(show_input())
 
-if choice == "7":
+if choice == "1":
+    local_backup()
+elif choice == "7":
     currentDir()
 elif choice == "0":
     os.system('clear'), sys.exit()
@@ -53,3 +68,6 @@ elif not int(choice) in range(0, 9):
     menu()
     show_info("Choix indisponible !")
     sys.exit()
+
+if __name__ == "__main__":
+    main()
