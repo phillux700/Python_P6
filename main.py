@@ -4,7 +4,9 @@
 import os
 import sys
 import datetime
+import time
 import shutil
+import tarfile
 
 date = datetime.datetime.now().strftime('%Y%m%d-%s')
 f_date = datetime.datetime.now().strftime('%Y%m%d')
@@ -23,18 +25,21 @@ def banner():
  \033[0m"""
     return banner
 
+# --- Variables --- #
+backup_path = '/home/philippe/P6/backup'
+source_directory = '/var/www/wordpress'
+todays_date = (time.strftime("%d-%m-%Y"))
+free_space_needed = 1000000
+backup_site_name = 'wordpress'
+database_name = 'wordpress_db'
+target_dir = '/home/philippe/P6/dir1/'
+username = 'philippe'
+password = 'password'
+
 def local_backup():
-    archive_path = "%s" % date
-    os.mkdir(archive_path, 755)
-    src_file = "%s.sql.gz" % f_date
-    dst = "%s" % date
-    shutil.move(src_file, dst)
-    output_filename_1 = "%s.html_dir" % f_date
-    output_filename_2 = "%s.html_dir.zip" % f_date
-    dir_name = '/var/www/wordpress'
-    dst = "%s" % date
-    shutil.make_archive(output_filename_1, 'zip', dir_name)
-    shutil.move(output_filename_2, dst)
+    os.system("tar -zcvf " + target_dir + todays_date + backup_site_name + ".tar.gz " + source_directory)
+    os.system("mysqldump -u " + database_name + " -p" + password + " " + database_name + "  > " + target_dir + todays_date + database_name + ".sql")
+
 
 # Affichage du menu
 def menu():
