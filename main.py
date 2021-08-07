@@ -53,9 +53,6 @@ def show_info(info):
 def show_input():
     return "{0}P6~# {1}".format('\033[31m', '\033[0m')
 
-def main():
-    print("Hi")
-
 menu()
 choice = input(show_input())
 
@@ -71,8 +68,3 @@ elif not int(choice) in range(0, 9):
     menu()
     show_info("Choix indisponible !")
     sys.exit()
-
-
-
-if __name__ == "__main__":
-    main()
