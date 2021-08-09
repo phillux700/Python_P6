@@ -71,7 +71,7 @@ def remote_backup():
     with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
         print("Connection succesfully established ... ")
         with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
-            sftp.put('/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
+            sftp.put('/var/www/wordpress/*')  # upload file to /home/philippe/backup/ on remote
             # sftp.get('remote_file')  # get a remote file
 
 def aws_backup():
