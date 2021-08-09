@@ -49,7 +49,7 @@ password = 'password'
 cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
-archive = target_dir + todays_date + backup_site_name + ".tar.gz "
+archive = target_dir + todays_date + backup_site_name + ".tar "
 archive_db = target_dir + todays_date + database_name + ".sql"
 
 # Permet de connaître le répertoire courant
