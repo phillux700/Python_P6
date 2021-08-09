@@ -50,6 +50,7 @@ cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
 archive = todays_date + backup_site_name + ".tar "
+zip_archive = todays_date + backup_site_name + ".tar "
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 
@@ -74,7 +75,7 @@ def local_backup():
     os.system("tar -rf " + archive + archive_db)
     os.system("rm " + archive_db)
     os.system("gzip -9  " + archive)
-    os.system("mv " + archive + ".gz" + target_dir)
+    os.system("mv " + zip_archive + target_dir)
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
