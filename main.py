@@ -50,7 +50,7 @@ cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
 archive = todays_date + backup_site_name + ".tar "
-zip_archive = todays_date + backup_site_name + ".tar "
+zip_archive = todays_date + backup_site_name + ".tar.gz "
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 
