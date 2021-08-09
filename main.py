@@ -74,6 +74,7 @@ def local_backup():
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db)
     os.system("rm " + archive_db)
+    os.system("cd " + target_dir)
     os.system("gzip -9  " + archive)
 
 def remote_backup():
