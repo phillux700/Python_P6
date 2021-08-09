@@ -69,16 +69,17 @@ def local_backup():
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
-    print("Connection succesfully established ... ")
+
         #with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
         #    sftp.put('/home/philippe/backup','/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
             # sftp.get('remote_file')  # get a remote file
     transport = paramiko.Transport(("192.168.2.2", 22))
     transport.connect(username = username, password =password)
     sftp = paramiko.SFTPClient.from_transport(transport)
-    path = "/home/philippe/backup"
-    localpath = "/var/www/wordpress"
-    sftp.put(localpath, path)
+    print("Connection succesfully established ... ")
+    path = "/home/philippe/backup/"
+    localpath = "/var/www/wordpress/"
+    sftp.put("/home/philippe/P6/backup/" + todays_date + database_name + ".sql", path + todays_date + database_name + ".sql")
 
     sftp.close()
     transport.close()
