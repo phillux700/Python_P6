@@ -75,8 +75,8 @@ def local_backup():
     os.system("rm " + archive_db)
     os.system("cd /var/www/wordpress")
     os.system("gzip -9  " + archive)
-    os.system("mv  " + archive + ".gz" + target_dir)
-    os.system("rm " + target_dir + "/" + archive)
+    os.system("mv " + archive + ".gz" + target_dir)
+    os.system("rm " + target_dir + "/" + archive + ".gz")
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
