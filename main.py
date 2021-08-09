@@ -49,8 +49,9 @@ password = 'password'
 cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
-archive = target_dir + todays_date + backup_site_name + ".tar "
-archive_db = target_dir + todays_date + database_name + ".sql"
+archive = todays_date + backup_site_name + ".tar "
+archive_db = todays_date + database_name + ".sql"
+archive_db_path = target_dir + todays_date + database_name + ".sql"
 
 # Permet de connaître le répertoire courant
 def currentDir():
@@ -67,7 +68,9 @@ def banner():
     return banner
 
 def local_backup():
-    os.system("tar -cvf " + archive + source_directory)
+    os.system("cd /var/www/wordpress")
+    os.system("tar -cvf " + archive + "*")
+    os.system("mv " + archive + target_dir)
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db)
     os.system("rm " + archive_db)
