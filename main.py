@@ -76,6 +76,7 @@ def local_backup():
     os.system("rm " + archive_db)
     os.system("cd " + target_dir)
     os.system("gzip -9  " + archive)
+    os.system("mv " + archive + target_dir)
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
