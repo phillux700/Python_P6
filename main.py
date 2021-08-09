@@ -18,6 +18,7 @@ import os
 import sys
 import datetime
 import time
+import pysftp
 import shutil
 import tarfile
 
@@ -28,6 +29,7 @@ import tarfile
 # https://docs.python.org/fr/3/library/time.html
 # https://docs.python.org/fr/3/library/shutil.html
 # https://docs.python.org/fr/3/library/tarfile.html
+# https://pypi.org/project/pysftp/
 ##################################################
 
 # --- Variables --- #
@@ -63,6 +65,11 @@ def local_backup():
 
 def remote_backup():
     print("remote")
+    with pysftp.Connection('192.168.2.2', username='philippe', password='password') as sftp:
+        print("Connection succesfully established ... ")
+        with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
+            sftp.put('/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
+            # sftp.get('remote_file')  # get a remote file
 
 def aws_backup():
     print("aws")
