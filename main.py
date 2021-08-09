@@ -19,6 +19,7 @@ import sys
 import datetime
 import time
 import pysftp
+import paramiko
 import shutil
 import tarfile
 
@@ -67,12 +68,20 @@ def local_backup():
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + target_dir + todays_date + database_name + ".sql")
 
 def remote_backup():
-    print("remote")
-    with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
-        print("Connection succesfully established ... ")
-        with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
-            sftp.put('/home/philippe/backup','/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
+    #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
+    print("Connection succesfully established ... ")
+        #with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
+        #    sftp.put('/home/philippe/backup','/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
             # sftp.get('remote_file')  # get a remote file
+    transport = paramiko.Transport(("192.168.2.2", 22))
+    transport.connect(username = username, password =password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    path = "/home/philippe/backup"
+    localpath = "/var/www/wordpress"
+    sftp.put(localpath, path)
+
+    sftp.close()
+    transport.close()
 
 def aws_backup():
     print("aws")
