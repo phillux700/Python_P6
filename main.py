@@ -70,6 +70,8 @@ def local_backup():
     os.system("tar -cvf " + archive + source_directory)
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db)
+    os.system("rm " + archive_db)
+    os.system("gzip -9  " + archive)
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
