@@ -67,8 +67,7 @@ def banner():
  \033[0m"""
     return banner
 
-def local_backup()
-    os.system("cd /var/www/wordpress")
+def local_backup():
     os.system("tar -cvf " + archive + "/var/www/wordpress/*")
     os.system("mv " + archive + target_dir)
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
