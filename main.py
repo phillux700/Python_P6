@@ -67,7 +67,7 @@ def banner():
     return banner
 
 def local_backup():
-    os.system("tar -zcvf " + archive + source_directory)
+    os.system("tar -cvf " + archive + source_directory)
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db)
 
