@@ -45,6 +45,9 @@ target_dir = '/home/philippe/P6/backup/'
 username = 'philippe'
 password = 'password'
 
+cnopts = pysftp.CnOpts()
+cnopts.hostkeys = None
+
 # Permet de connaître le répertoire courant
 def currentDir():
     currentDir = print(os.getcwd())
@@ -65,7 +68,7 @@ def local_backup():
 
 def remote_backup():
     print("remote")
-    with pysftp.Connection('192.168.2.2', username='philippe', password='password') as sftp:
+    with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
         print("Connection succesfully established ... ")
         with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
             sftp.put('/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
