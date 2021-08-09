@@ -68,8 +68,6 @@ def banner():
  \033[0m"""
     return banner
 
-# os.system("mv " + archive + target_dir)
-
 def local_backup():
     os.system("tar -cvf " + archive + "/var/www/wordpress/*")
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
@@ -91,7 +89,9 @@ def remote_backup():
     print("Connection succesfully established ... ")
     path = "/home/philippe/backup/"
     localpath = "/var/www/wordpress/"
-    sftp.put("/home/philippe/P6/backup/" + todays_date + database_name + ".sql", path + todays_date + database_name + ".sql")
+    sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
+
+    # sftp.put("/home/philippe/P6/backup/" + todays_date + database_name + ".sql", path + todays_date + database_name + ".sql")
 
     sftp.close()
     transport.close()
