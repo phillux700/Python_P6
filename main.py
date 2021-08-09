@@ -20,6 +20,7 @@ import datetime
 import time
 import pysftp
 import paramiko
+import botocore
 import shutil
 import tarfile
 
@@ -80,7 +81,6 @@ def local_backup():
 
 def remote_backup():
     #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
-
         #with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
         #    sftp.put('/home/philippe/backup','/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
             # sftp.get('remote_file')  # get a remote file
@@ -98,7 +98,28 @@ def remote_backup():
     transport.close()
 
 def aws_backup():
-    print("aws")
+    # Create an S3 Client
+    s3_client = boto3.client('s3')
+    # Upload object
+    try:
+        # Creating a bucket
+        s3_client.create_bucket(Bucket='p6-eu-west-1-bucket')
+        print("Bucket created succesfully")
+        print('Uploading object ...')
+        #s3_client.upload_file(local_file_name, bucket_name, key_name)
+        print('Uploaded')
+
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "NoSuchBucket":
+            print("Error: Bucket does not exist!!")
+        elif e.response['Error']['Code'] == "InvalidBucketName":
+            print("Error: Invalid Bucket name!!")
+        elif e.response['Error']['Code'] == "AllAccessDisabled":
+            print("Error: You do not have access to the Bucket!!")
+        else:
+            raise
+
+    return
 
 
 
