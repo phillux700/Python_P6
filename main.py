@@ -34,14 +34,18 @@ import tarfile
 # https://docs.python.org/fr/3/library/shutil.html
 # https://docs.python.org/fr/3/library/tarfile.html
 # https://pypi.org/project/pysftp/
+# http://docs.paramiko.org/en/stable/api/client.html
+# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration
+# https://botocore.amazonaws.com/v1/documentation/api/latest/index.html
+# https://github.com/tqdm/tqdm
 ##################################################
 
 # --- Variables --- #
-date = datetime.datetime.now().strftime('%Y%m%d-%s')
-f_date = datetime.datetime.now().strftime('%Y%m%d')
+#date = datetime.datetime.now().strftime('%Y%m%d-%s')
+#f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%d-%m-%Y"))
+todays_date = (time.strftime("%Y-%m-%d-%H:%M"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
@@ -71,16 +75,11 @@ def banner():
  \033[0m"""
     return banner
 
-    #os.system("rm " + archive_db)
-    #os.system("gzip -9 " + archive)
-    #os.system("rm " + target_dir + archive)
-
 def local_backup():
     os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
     os.system("mv " + zip_archive + " " + target_dir)
-    #  + " && " + "rm " + target_dir + archive
 
 def remote_backup():
     transport = paramiko.Transport(("192.168.2.2", 22))
@@ -91,12 +90,11 @@ def remote_backup():
     localpath = "/var/www/wordpress/"
     sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
 
-    # sftp.put("/home/philippe/P6/backup/" + todays_date + database_name + ".sql", path + todays_date + database_name + ".sql")
-
     sftp.close()
     transport.close()
 
 # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+# https://adamtheautomator.com/boto3-s3/
 def aws_backup():
     # Create an S3 Client
     s3_client = boto3.client(
