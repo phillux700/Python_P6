@@ -76,7 +76,7 @@ def banner():
     #os.system("rm " + target_dir + archive)
 
 def local_backup():
-    os.system("tar -cvf " + archive + "/var/www/wordpress/*")
+    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " " + 's,^var/www/wordpress,www,' + " /var/www/wordpress")
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
     os.system("mv " + zip_archive + " " + target_dir + " && " + "rm " + target_dir + archive)
