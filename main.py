@@ -98,9 +98,14 @@ def remote_backup():
     sftp.close()
     transport.close()
 
+# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 def aws_backup():
     # Create an S3 Client
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
+        aws_secret_access_key="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"
+    )
     # Upload object
     try:
         # Creating a bucket
@@ -122,6 +127,17 @@ def aws_backup():
 
     return
 
+def restore_from_local():
+    restore_local = print("restore local")
+    return restore_local
+
+def restore_from_remote():
+    restore_local = print("restore remote")
+    return restore_local
+
+def restore_from_aws():
+    restore_local = print("restore aws")
+    return restore_local
 
 
 # Affichage du menu
@@ -156,11 +172,11 @@ elif choice == "2":
 elif choice == "3":
     aws_backup()
 elif choice == "4":
-    aws_backup()
+    restore_from_local()
 elif choice == "5":
-    aws_backup()
+    restore_from_remote()
 elif choice == "6":
-    aws_backup()
+    restore_from_aws()
 elif choice == "7":
     currentDir()
 elif choice == "0":
