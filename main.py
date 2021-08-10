@@ -81,10 +81,6 @@ def local_backup():
     os.system("mv " + zip_archive + " " + target_dir + " && " + "rm " + target_dir + archive)
 
 def remote_backup():
-    #with pysftp.Connection('192.168.2.2', username='philippe', password='password', cnopts=cnopts) as sftp:
-        #with sftp.cd('/home/philippe/backup'):  # temporarily chdir to public
-        #    sftp.put('/home/philippe/backup','/var/www/wordpress')  # upload file to /home/philippe/backup/ on remote
-            # sftp.get('remote_file')  # get a remote file
     transport = paramiko.Transport(("192.168.2.2", 22))
     transport.connect(username = username, password =password)
     sftp = paramiko.SFTPClient.from_transport(transport)
@@ -112,7 +108,19 @@ def aws_backup():
         s3_client.create_bucket(Bucket='p6-eu-west-1-bucket')
         print("Bucket created succesfully")
         print('Uploading object ...')
-        s3_client.upload_file("/home/philippe/P6/backup/" + zip_archive, 'p6-eu-west-1-bucket', zip_archive)
+        """
+            Upload a file to S3 with a progress bar.
+
+            From https://alexwlchan.net/2021/04/s3-progress-bars/
+        """
+        file_size = os.stat(zip_archive).st_size
+        with tqdm.tqdm(total=file_size, unit="B", unit_scale=True, desc=zip_archive) as pbar:
+            s3_client.upload_file(
+                "/home/philippe/P6/backup/" + zip_archive,
+                'p6-eu-west-1-bucket',
+                zip_archive,
+                Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
+            )
         print('Uploaded')
 
     except botocore.exceptions.ClientError as e:
