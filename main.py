@@ -45,7 +45,7 @@ import tarfile
 #f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%Y%m%d-%H:%M"))
+todays_date = (time.strftime("%Y%m%d%H:%M"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
@@ -56,8 +56,8 @@ password = 'password'
 cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
-archive = todays_date + "_" + backup_site_name + ".tar "
-zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
+archive = todays_date + backup_site_name + ".tar "
+zip_archive = todays_date + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 
@@ -76,7 +76,7 @@ def banner():
     return banner
 
 def local_backup():
-    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + "_" + backup_site_name + ',' + " /var/www/wordpress")
+    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
     os.system("mv " + zip_archive + " " + target_dir)
