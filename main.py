@@ -76,10 +76,11 @@ def banner():
     #os.system("rm " + target_dir + archive)
 
 def local_backup():
-    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,www,' + " /var/www/wordpress")
+    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
     os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
     os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
-    os.system("mv " + zip_archive + " " + target_dir + " && " + "rm " + target_dir + archive)
+    os.system("mv " + zip_archive + " " + target_dir)
+    #  + " && " + "rm " + target_dir + archive
 
 def remote_backup():
     transport = paramiko.Transport(("192.168.2.2", 22))
