@@ -112,7 +112,7 @@ def aws_backup():
         s3_client.create_bucket(Bucket='p6-eu-west-1-bucket')
         print("Bucket created succesfully")
         print('Uploading object ...')
-        s3_client.upload_file("/home/philippe/P6/backup/" + zip_archive, 'p6-eu-west-1-bucket')
+        s3_client.upload_file("/home/philippe/P6/backup/" + zip_archive, 'p6-eu-west-1-bucket', 'upload')
         print('Uploaded')
 
     except botocore.exceptions.ClientError as e:
