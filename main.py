@@ -22,6 +22,7 @@ import pysftp
 import paramiko
 import boto3
 import botocore
+import tqdm
 import shutil
 import tarfile
 
@@ -113,7 +114,7 @@ def aws_backup():
 
             From https://alexwlchan.net/2021/04/s3-progress-bars/
         """
-        file_size = os.stat(zip_archive).st_size
+        file_size = os.stat("/home/philippe/P6/backup/" + zip_archive).st_size
         with tqdm.tqdm(total=file_size, unit="B", unit_scale=True, desc=zip_archive) as pbar:
             s3_client.upload_file(
                 "/home/philippe/P6/backup/" + zip_archive,
