@@ -41,11 +41,11 @@ import tarfile
 ##################################################
 
 # --- Variables --- #
-#date = datetime.datetime.now().strftime('%Y%m%d-%s')
-#f_date = datetime.datetime.now().strftime('%Y%m%d')
+date = datetime.datetime.now().strftime('%Y%m%d-%s')
+f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%Y%m%d%H:%M"))
+todays_date = (time.strftime("%d-%m-%Y"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
