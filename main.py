@@ -46,7 +46,7 @@ date = datetime.datetime.now().strftime('%Y%m%d-%s')
 f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%Y%m%d_%HH-%M"))
+todays_date = (time.strftime("%Y%m%d_%HH%M"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
@@ -84,6 +84,7 @@ def local_backup():
         os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
         os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
         os.system("mv " + zip_archive + " " + target_dir)
+        os.system("find /home/philippe/P6/backup/* -type -mmin -5 -delete ")
         print('Local backup successful ...')
 
         #### TODO Rotation des fichiers
