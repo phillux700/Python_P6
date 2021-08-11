@@ -23,6 +23,7 @@ import paramiko
 import boto3
 import botocore
 import tqdm
+import re
 import shutil
 import tarfile
 
@@ -66,6 +67,7 @@ def currentDir():
     currentDir = print(os.getcwd())
     return currentDir
 
+# Fonction permettant de définir une bannière pour le menu
 def banner():
     banner = """\033[92m
  |__ /__|_  )__/ | | _ ) __ _ __| |___  _ _ __  | _ \_  _| |___ 
@@ -75,26 +77,47 @@ def banner():
  \033[0m"""
     return banner
 
+# Fonction permettant de faire une sauvegarde sur le serveur local
 def local_backup():
-    os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
-    os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
-    os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
-    os.system("mv " + zip_archive + " " + target_dir)
+    try:
+        os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
+        os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
+        os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
+        os.system("mv " + zip_archive + " " + target_dir)
+        print('Local backup successful ...')
 
+        #### TODO Rotation des fichiers
+    except:
+        print('An error occured !')
+
+# Fonction permettant de faire une sauvegarde sur le serveur distant
 def remote_backup():
-    transport = paramiko.Transport(("192.168.2.2", 22))
-    transport.connect(username = username, password =password)
-    sftp = paramiko.SFTPClient.from_transport(transport)
-    print("Connection succesfully established ... ")
-    path = "/home/philippe/backup/"
-    localpath = "/var/www/wordpress/"
-    sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
+    try:
+        transport = paramiko.Transport(("192.168.2.2", 22))
+        transport.connect(username = username, password =password)
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        print("Connection succesfully established ... ")
+        path = "/home/philippe/backup/"
+        localpath = "/var/www/wordpress/"
+        sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
+        sftp.close()
+        transport.close()
+        #### TODO Rotation des fichiers
+    except paramiko.AuthenticationException:
+        print('Failed')
+        print(': Sftp Authentication Failure.')
 
-    sftp.close()
-    transport.close()
+    except PermissionError:
+        print('Failed')
+        print(': Permission Denied Error From Server.')
+    except:
+        print('An error occured !')
 
+# Fonction permettant de faire une sauvegarde dans un bucket S3 AWS
+####################### DOCUMENTATION ##########################################
 # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 # https://adamtheautomator.com/boto3-s3/
+################################################################################
 def aws_backup():
     # Create an S3 Client
     s3_client = boto3.client(
@@ -122,6 +145,7 @@ def aws_backup():
                 Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
             )
         print('Uploaded')
+        #### TODO Rotation des fichiers
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "NoSuchBucket":
@@ -135,17 +159,23 @@ def aws_backup():
 
     return
 
+# Fonction permettant de faire une restauration depuis le serveur local
 def restore_from_local():
     restore_local = print("restore local")
     return restore_local
+    #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
+# Fonction permettant de faire une restauration depuis le serveur distant
 def restore_from_remote():
-    restore_local = print("restore remote")
-    return restore_local
+    restore_remote = print("restore remote")
+    return restore_remote
+    #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
+# Fonction permettant de faire une restauration depuis le bucket S3 AWS
 def restore_from_aws():
-    restore_local = print("restore aws")
-    return restore_local
+    restore_aws = print("restore aws")
+    return restore_aws
+    #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 
 # Affichage du menu
