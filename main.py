@@ -65,7 +65,7 @@ zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 
-def currentDir()
+def currentDir():
     """
         Permet de connaître le répertoire courant
     """
