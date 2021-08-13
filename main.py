@@ -113,7 +113,7 @@ def remote_backup():
         transport.connect(username = username, password =password)
         sftp = paramiko.SFTPClient.from_transport(transport)
         print("Connection succesfully established ... ")
-        path = "/home/philippe/backup/"
+        path = "/home/philippe/P6/backup/"
         localpath = "/var/www/wordpress/"
         sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
         sftp.close()
