@@ -39,6 +39,9 @@ import tarfile
 # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration
 # https://botocore.amazonaws.com/v1/documentation/api/latest/index.html
 # https://github.com/tqdm/tqdm
+# https://www.python.org/dev/peps/pep-0020/
+# https://www.python.org/dev/peps/pep-0008/
+# https://www.python.org/dev/peps/pep-0257/
 ##################################################
 
 # --- Variables --- #
@@ -80,14 +83,18 @@ def banner():
 # Fonction permettant de faire une sauvegarde sur le serveur local
 def local_backup():
     try:
-        os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
-        os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
-        os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
-        os.system("mv " + zip_archive + " " + target_dir)
-        os.system("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
-        print('Local backup successful ...')
-
-        #### TODO Rotation des fichiers
+        size = os.statvfs(target_dir)
+        free_space = (size.f_bavail * size.f_frsize) / 1024
+        if free_space > free_space_needed:
+            os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
+            os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
+            os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
+            os.system("mv " + zip_archive + " " + target_dir)
+            os.system("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+            print('Local backup successful ...')
+            print('Backup rotation successful ...')
+        else:
+            print('Not enough space !')
     except:
         print('An error occured !')
 
@@ -103,6 +110,7 @@ def remote_backup():
         sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
         sftp.close()
         transport.close()
+        print('Remote backup successful ...')
         #### TODO Rotation des fichiers
     except paramiko.AuthenticationException:
         print('Failed')
