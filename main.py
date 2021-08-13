@@ -124,12 +124,6 @@ def remote_backup():
         transport.close()
         print('Remote backup successful ...')
 
-        ssh = paramiko.SSHClient()
-        #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(hostname='192.168.2.2', username=username, password =password)
-        ssh.exec_command("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
-        print('Remote backup rotation successful ...')
-        ssh.close()
     except paramiko.AuthenticationException:
         print('Failed')
         print(': Sftp Authentication Failure.')
@@ -139,6 +133,13 @@ def remote_backup():
         print(': Permission Denied Error From Server.')
     except:
         print('An error occured !')
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname='192.168.2.2', username=username, password=password)
+    ssh.exec_command("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+    print('Remote backup rotation successful ...')
+    ssh.close()
 
 def aws_backup():
     """
