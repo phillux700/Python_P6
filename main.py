@@ -27,22 +27,22 @@ import re
 import shutil
 import tarfile
 
-############### DOCUMENTATION ####################
-# https://docs.python.org/fr/3/library/os.html
-# https://docs.python.org/fr/3/library/sys.html
-# https://docs.python.org/fr/3/library/datetime.html
-# https://docs.python.org/fr/3/library/time.html
-# https://docs.python.org/fr/3/library/shutil.html
-# https://docs.python.org/fr/3/library/tarfile.html
-# https://pypi.org/project/pysftp/
-# http://docs.paramiko.org/en/stable/api/client.html
-# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration
-# https://botocore.amazonaws.com/v1/documentation/api/latest/index.html
-# https://github.com/tqdm/tqdm
-# https://www.python.org/dev/peps/pep-0020/
-# https://www.python.org/dev/peps/pep-0008/
-# https://www.python.org/dev/peps/pep-0257/
-##################################################
+"""############### DOCUMENTATION ####################
+https://docs.python.org/fr/3/library/os.html
+https://docs.python.org/fr/3/library/sys.html
+https://docs.python.org/fr/3/library/datetime.html
+https://docs.python.org/fr/3/library/time.html
+https://docs.python.org/fr/3/library/shutil.html
+https://docs.python.org/fr/3/library/tarfile.html
+https://pypi.org/project/pysftp/
+http://docs.paramiko.org/en/stable/api/client.html
+https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration
+https://botocore.amazonaws.com/v1/documentation/api/latest/index.html
+https://github.com/tqdm/tqdm
+https://www.python.org/dev/peps/pep-0020/
+https://www.python.org/dev/peps/pep-0008/
+https://www.python.org/dev/peps/pep-0257/
+"""
 
 # --- Variables --- #
 date = datetime.datetime.now().strftime('%Y%m%d-%s')
@@ -65,13 +65,17 @@ zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 
-# Permet de connaître le répertoire courant
-def currentDir():
+def currentDir()
+    """
+        Permet de connaître le répertoire courant
+    """
     currentDir = print(os.getcwd())
     return currentDir
 
-# Fonction permettant de définir une bannière pour le menu
 def banner():
+    """
+        Fonction permettant de définir une bannière pour le menu
+    """
     banner = """\033[92m
  |__ /__|_  )__/ | | _ ) __ _ __| |___  _ _ __  | _ \_  _| |___ 
   |_ \___/ /___| | | _ \/ _` / _| / / || | '_ \ |   / || | / -_)
@@ -80,8 +84,10 @@ def banner():
  \033[0m"""
     return banner
 
-# Fonction permettant de faire une sauvegarde sur le serveur local
 def local_backup():
+    """
+        Fonction permettant de faire une sauvegarde sur le serveur local
+    """
     try:
         size = os.statvfs(target_dir)
         free_space = (size.f_bavail * size.f_frsize) / 1024
@@ -98,8 +104,10 @@ def local_backup():
     except:
         print('An error occured !')
 
-# Fonction permettant de faire une sauvegarde sur le serveur distant
 def remote_backup():
+    """
+        Fonction permettant de faire une sauvegarde sur le serveur distant
+    """
     try:
         transport = paramiko.Transport(("192.168.2.2", 22))
         transport.connect(username = username, password =password)
@@ -122,12 +130,14 @@ def remote_backup():
     except:
         print('An error occured !')
 
-# Fonction permettant de faire une sauvegarde dans un bucket S3 AWS
-####################### DOCUMENTATION ##########################################
-# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
-# https://adamtheautomator.com/boto3-s3/
-################################################################################
 def aws_backup():
+    """
+        Fonction permettant de faire une sauvegarde dans un bucket S3 AWS
+
+        Documentation:
+        https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+        https://adamtheautomator.com/boto3-s3/
+    """
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
@@ -168,20 +178,26 @@ def aws_backup():
 
     return
 
-# Fonction permettant de faire une restauration depuis le serveur local
 def restore_from_local():
+    """
+        Fonction permettant de faire une restauration depuis le serveur local
+    """
     restore_local = print("restore local")
     return restore_local
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
-# Fonction permettant de faire une restauration depuis le serveur distant
 def restore_from_remote():
+    """
+        Fonction permettant de faire une restauration depuis le serveur distant
+    """
     restore_remote = print("restore remote")
     return restore_remote
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
-# Fonction permettant de faire une restauration depuis le bucket S3 AWS
 def restore_from_aws():
+    """
+        Fonction permettant de faire une restauration depuis le bucket S3 AWS
+    """
     restore_aws = print("restore aws")
     return restore_aws
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
