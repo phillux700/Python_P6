@@ -107,6 +107,9 @@ def local_backup():
 def remote_backup():
     """
         Fonction permettant de faire une sauvegarde sur le serveur distant
+
+        Documentation:
+        https://blog.ruanbekker.com/blog/2018/04/23/using-paramiko-module-in-python-to-execute-remote-bash-commands/
     """
     try:
         local_backup()
@@ -120,7 +123,13 @@ def remote_backup():
         sftp.close()
         transport.close()
         print('Remote backup successful ...')
-        #### TODO Rotation des fichiers
+
+        ssh = paramiko.SSHClient()
+        #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(hostname='192.168.2.2', username=username, password =password)
+        ssh.exec_command("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+        print('Remote backup rotation successful ...')
+        ssh.close()
     except paramiko.AuthenticationException:
         print('Failed')
         print(': Sftp Authentication Failure.')
