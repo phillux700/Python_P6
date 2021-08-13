@@ -109,6 +109,7 @@ def remote_backup():
         Fonction permettant de faire une sauvegarde sur le serveur distant
     """
     try:
+        local_backup()
         transport = paramiko.Transport(("192.168.2.2", 22))
         transport.connect(username = username, password =password)
         sftp = paramiko.SFTPClient.from_transport(transport)
