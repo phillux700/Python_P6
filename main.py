@@ -148,6 +148,8 @@ def aws_backup():
         Documentation:
         https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
         https://adamtheautomator.com/boto3-s3/
+
+        NB: Une configuration de cycle de vie a directement été créée dans le bucket pour supprimer les objets après 7 jours.
     """
     # Create an S3 Client
     s3_client = boto3.client(
@@ -175,7 +177,6 @@ def aws_backup():
                 Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
             )
         print('Uploaded')
-        #### TODO Rotation des fichiers
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "NoSuchBucket":
