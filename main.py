@@ -97,7 +97,7 @@ def local_backup():
             os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
             os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
             os.system("mv " + zip_archive + " " + target_dir)
-            os.system("find /home/philippe/P6/backup/. -type f -mmin +" + rotation_time + " -delete")
+            os.system("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
             print('Local backup successful ...')
             print('Backup rotation successful ...')
         else:
