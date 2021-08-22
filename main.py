@@ -180,6 +180,8 @@ def aws_backup():
             )
         print('Uploaded')
 
+        os.system("rm /home/philippe/P6/backup/" + zip_archive)
+
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "NoSuchBucket":
             print("Error: Bucket does not exist!!")
