@@ -45,11 +45,11 @@ https://www.python.org/dev/peps/pep-0257/
 """
 
 # --- Variables --- #
-date = datetime.datetime.now().strftime('%Y%m%d-%s')
-f_date = datetime.datetime.now().strftime('%Y%m%d')
+# date = datetime.datetime.now().strftime('%Y%m%d-%s')
+# f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%Y%m%d_%HH%M"))
+todays_date = (time.strftime("%Y%m%d_%HH%M", time.gmtime()))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
@@ -64,7 +64,7 @@ archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
-rotation_time = 10080        # 1 week
+rotation_time = 10        # 1 week = 10080, 1 day = 1440
 
 def currentDir():
     """
