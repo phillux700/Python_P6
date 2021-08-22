@@ -66,13 +66,6 @@ archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 rotation_time = '1'        # 1 week = 10080, 1 day = 1440
 
-def currentDir():
-    """
-        Permet de connaître le répertoire courant
-    """
-    currentDir = print(os.getcwd())
-    return currentDir
-
 def banner():
     """
         Fonction permettant de définir une bannière pour le menu
@@ -83,7 +76,14 @@ def banner():
  |___/  /___|  |_| |___/\__,_\__|_\_\\_,_| .__/ |_|_\\_,_|_\___|
                                          |_|                    
  \033[0m"""
-    return banner
+    return 
+
+def rotate():
+    """
+        Fonction permettant la rotation des fichiers sur le serveur local
+    """
+    os.system("find /home/philippe/P6/backup/. -type f -mmin +" + rotation_time + " -delete")
+    print('Backup rotation successful ...')
 
 def local_backup():
     """
@@ -97,15 +97,16 @@ def local_backup():
             os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
             os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
             os.system("mv " + zip_archive + " " + target_dir)
-            os.system("find /home/philippe/P6/backup/. -type f -mmin +" + rotation_time + " -delete")
             print('Local backup successful ...')
-            print('Backup rotation successful ...')
         else:
             print('Not enough space !')
     except:
         print('An error occured !')
 
-def remote_backup():
+def del_backup(zip_archive):
+    os.system("rm /home/philippe/P6/backup/" + zip_archive)
+
+def remote_backup_only():
     """
         Fonction permettant de faire une sauvegarde sur le serveur distant
 
@@ -119,12 +120,10 @@ def remote_backup():
         sftp = paramiko.SFTPClient.from_transport(transport)
         print("Connection succesfully established ... ")
         path = "/home/philippe/P6/backup/"
-        # localpath = "/var/www/wordpress/"
         sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
         sftp.close()
         transport.close()
         print('Remote backup successful ...')
-        os.system("rm /home/philippe/P6/backup/" + zip_archive)
 
     except paramiko.AuthenticationException:
         print('Failed')
@@ -136,6 +135,10 @@ def remote_backup():
     except:
         print('An error occured !')
 
+def rotate_remote():
+    """
+        Fonction permettant de faire une sauvegarde sur le serveur distant
+    """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.2.2', username=username, password=password)
@@ -180,8 +183,6 @@ def aws_backup():
                 Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
             )
         print('Uploaded')
-
-        os.system("rm /home/philippe/P6/backup/" + zip_archive)
 
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "NoSuchBucket":
@@ -246,10 +247,14 @@ choice = input(show_input())
 
 if choice == "1":
     local_backup()
+    rotate()
 elif choice == "2":
-    remote_backup()
+    remote_backup_only()
+    rotate_remote()
+    del_backup(zip_archive)
 elif choice == "3":
     aws_backup()
+    del_backup(zip_archive)
 elif choice == "4":
     restore_from_local()
 elif choice == "5":
