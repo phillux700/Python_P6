@@ -49,7 +49,7 @@ https://www.python.org/dev/peps/pep-0257/
 # f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
-todays_date = (time.strftime("%Y%m%d_%HH%M", time.gmtime()))
+todays_date = (time.strftime("%Y%m%d_%HH%M"))
 free_space_needed = 1000000
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
