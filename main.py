@@ -64,7 +64,7 @@ archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
-rotation_time = 10        # 1 week = 10080, 1 day = 1440
+rotation_time = '1'        # 1 week = 10080, 1 day = 1440
 
 def currentDir():
     """
@@ -97,7 +97,7 @@ def local_backup():
             os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
             os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
             os.system("mv " + zip_archive + " " + target_dir)
-            os.system("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+            os.system("find /home/philippe/P6/backup/. -type f -mmin +" + rotation_time + " -delete")
             print('Local backup successful ...')
             print('Backup rotation successful ...')
         else:
