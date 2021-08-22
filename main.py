@@ -205,7 +205,7 @@ def restore_from_local():
     number = 0
     while number < len(backups):
         number = number + 1
-        print(number +". " + backups[number - 1] + "\n")
+        print(str(number) + ". " + backups[number - 1] + "\n")
 
     backup_choice = input(show_input())
     print("T'as choisi " + backup_choice)
