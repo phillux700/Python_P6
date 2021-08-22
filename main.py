@@ -241,30 +241,30 @@ def show_info(info):
 def show_input():
     return "{0}P6~# {1}".format('\033[31m', '\033[0m')
 
-def menu():
-    choice = input(show_input())
+menu()
+choice = input(show_input())
 
-    if choice == "1":
-        local_backup()
-        rotate()
-    elif choice == "2":
-        remote_backup_only()
-        rotate_remote()
-        del_backup(zip_archive)
-    elif choice == "3":
-        aws_backup()
-        del_backup(zip_archive)
-    elif choice == "4":
-        restore_from_local()
-    elif choice == "5":
-        restore_from_remote()
-    elif choice == "6":
-        restore_from_aws()
-    elif choice == "0":
-        os.system('clear'), sys.exit()
-    elif choice == "":
-        menu()
-    elif not int(choice) in range(0, 9):
-        menu()
-        show_info("Choix indisponible !")
-        sys.exit()
+if choice == "1":
+    local_backup()
+    rotate()
+elif choice == "2":
+    remote_backup_only()
+    rotate_remote()
+    del_backup(zip_archive)
+elif choice == "3":
+    aws_backup()
+    del_backup(zip_archive)
+elif choice == "4":
+    restore_from_local()
+elif choice == "5":
+    restore_from_remote()
+elif choice == "6":
+    restore_from_aws()
+elif choice == "0":
+    os.system('clear'), sys.exit()
+elif choice == "":
+    menu()
+elif not int(choice) in range(0, 9):
+    menu()
+    show_info("Choix indisponible !")
+    sys.exit()
