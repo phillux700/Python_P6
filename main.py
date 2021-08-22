@@ -153,6 +153,7 @@ def aws_backup():
 
         NB: Une configuration de cycle de vie a directement été créée dans le bucket pour supprimer les objets après 7 jours.
     """
+    local_backup()
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
