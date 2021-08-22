@@ -204,8 +204,9 @@ def restore_from_local():
     backups = os.listdir("/home/philippe/P6/backup")
     number = 0
     while number < len(backups):
-        print((number + 1))
-        print(". backup\n")
+        number = number + 1
+        print(number)
+        print(backups[number] + "\n")
 
     backup_choice = input(show_input())
     print("T'as choisi " + backup_choice)
