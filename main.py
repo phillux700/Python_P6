@@ -18,7 +18,7 @@ import os
 import sys
 import datetime
 import time
-import pysftp
+# import pysftp
 import paramiko
 import boto3
 import botocore
@@ -34,7 +34,6 @@ https://docs.python.org/fr/3/library/datetime.html
 https://docs.python.org/fr/3/library/time.html
 https://docs.python.org/fr/3/library/shutil.html
 https://docs.python.org/fr/3/library/tarfile.html
-https://pypi.org/project/pysftp/
 http://docs.paramiko.org/en/stable/api/client.html
 https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration
 https://botocore.amazonaws.com/v1/documentation/api/latest/index.html
@@ -57,8 +56,8 @@ target_dir = '/home/philippe/P6/backup/'
 username = 'philippe'
 password = 'password'
 
-cnopts = pysftp.CnOpts()
-cnopts.hostkeys = None
+# cnopts = pysftp.CnOpts()
+# cnopts.hostkeys = None
 
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
