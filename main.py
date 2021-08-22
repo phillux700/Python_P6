@@ -113,7 +113,6 @@ def remote_backup():
         https://blog.ruanbekker.com/blog/2018/04/23/using-paramiko-module-in-python-to-execute-remote-bash-commands/
     """
     try:
-        #local_backup()
         transport = paramiko.Transport(("192.168.2.2", 22))
         transport.connect(username = username, password =password)
         sftp = paramiko.SFTPClient.from_transport(transport)
@@ -155,7 +154,6 @@ def aws_backup():
 
         NB: Une configuration de cycle de vie a directement été créée dans le bucket pour supprimer les objets après 7 jours.
     """
-    #local_backup()
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
@@ -199,6 +197,7 @@ def three_rules():
     """
         Fonction permettant de faire une sauvegarde sur le serveur distant, sur le serveur local et sur AWS !
     """
+    local_backup()
     remote_backup()
     aws_backup()
     rotate()
