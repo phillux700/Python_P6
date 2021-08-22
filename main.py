@@ -16,16 +16,11 @@
 
 import os
 import sys
-import datetime
 import time
-# import pysftp
 import paramiko
 import boto3
 import botocore
 import tqdm
-import re
-import shutil
-import tarfile
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -44,8 +39,6 @@ https://www.python.org/dev/peps/pep-0257/
 """
 
 # --- Variables --- #
-# date = datetime.datetime.now().strftime('%Y%m%d-%s')
-# f_date = datetime.datetime.now().strftime('%Y%m%d')
 backup_path = '/home/philippe/P6/backup/'
 source_directory = '/var/www/wordpress'
 todays_date = (time.strftime("%Y%m%d_%HH%M"))
@@ -55,15 +48,11 @@ database_name = 'wordpress_db'
 target_dir = '/home/philippe/P6/backup/'
 username = 'philippe'
 password = 'password'
-
-# cnopts = pysftp.CnOpts()
-# cnopts.hostkeys = None
-
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
-rotation_time = '1'        # 1 week = 10080, 1 day = 1440
+rotation_time = '60'        # 1 week = 10080, 1 day = 1440
 
 def banner():
     """
@@ -103,6 +92,9 @@ def local_backup():
         print('An error occured !')
 
 def del_backup(zip_archive):
+    """
+        Fonction permettant de supprimer une sauvegarde sur le serveur local
+    """
     os.system("rm /home/philippe/P6/backup/" + zip_archive)
 
 def remote_backup():
