@@ -208,7 +208,7 @@ def restore_from_local():
         print(str(number) + ". " + backups[number - 1] + "\n")
 
     backup_choice = input(show_input())
-    print("T'as choisi " + backup_choice[number - 1])
+    print("T'as choisi " + backups[int(backup_choice) - 1])
 
 
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
