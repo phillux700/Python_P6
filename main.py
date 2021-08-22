@@ -105,7 +105,7 @@ def local_backup():
 def del_backup(zip_archive):
     os.system("rm /home/philippe/P6/backup/" + zip_archive)
 
-def remote_backup_only():
+def remote_backup():
     """
         Fonction permettant de faire une sauvegarde sur le serveur distant
 
@@ -113,7 +113,7 @@ def remote_backup_only():
         https://blog.ruanbekker.com/blog/2018/04/23/using-paramiko-module-in-python-to-execute-remote-bash-commands/
     """
     try:
-        local_backup()
+        #local_backup()
         transport = paramiko.Transport(("192.168.2.2", 22))
         transport.connect(username = username, password =password)
         sftp = paramiko.SFTPClient.from_transport(transport)
@@ -155,7 +155,7 @@ def aws_backup():
 
         NB: Une configuration de cycle de vie a directement été créée dans le bucket pour supprimer les objets après 7 jours.
     """
-    local_backup()
+    #local_backup()
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
@@ -194,6 +194,15 @@ def aws_backup():
             raise
 
     return
+
+def three_rules():
+    """
+        Fonction permettant de faire une sauvegarde sur le serveur distant, sur le serveur local et sur AWS !
+    """
+    remote_backup()
+    aws_backup()
+    rotate()
+    rotate_remote()
 
 def restore_from_local():
     """
@@ -248,17 +257,21 @@ if choice == "1":
     local_backup()
     rotate()
 elif choice == "2":
-    remote_backup_only()
+    local_backup()
+    remote_backup()
     rotate_remote()
     del_backup(zip_archive)
 elif choice == "3":
+    local_backup()
     aws_backup()
     del_backup(zip_archive)
 elif choice == "4":
-    restore_from_local()
+    three_rules()
 elif choice == "5":
-    restore_from_remote()
+    restore_from_local()
 elif choice == "6":
+    restore_from_remote()
+elif choice == "7":
     restore_from_aws()
 elif choice == "0":
     os.system('clear'), sys.exit()
