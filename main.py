@@ -189,6 +189,7 @@ def three_rules():
     """
         Fonction permettant de faire une sauvegarde sur le serveur distant, sur le serveur local et sur AWS !
     """
+
     local_backup()
     remote_backup()
     aws_backup()
@@ -199,16 +200,27 @@ def restore_from_local():
     """
         Fonction permettant de faire une restauration depuis le serveur local
     """
-    #restore_local = print("restore local")
-    #return restore_local
+
     backups = os.listdir("/home/philippe/P6/backup")
+    print("Quelle sauvegarde choisissez-vous ?")
     number = 0
     while number < len(backups):
         number = number + 1
         print(str(number) + ". " + backups[number - 1] + "\n")
 
     backup_choice = input(show_input())
-    print("T'as choisi " + backups[int(backup_choice) - 1])
+    file_to_restore = backups[int(backup_choice) - 1]
+    print("Vous avez choisi la sauvegarde " + file_to_restore)
+
+    transport = paramiko.Transport(("192.168.1.4", 22))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    print("Connection succesfully established ... ")
+    path = "/home/philippe/P6/backup/"
+    sftp.put("/home/philippe/P6/backup/" + file_to_restore, path + file_to_restore)
+    sftp.close()
+    transport.close()
+    print('File has been sent ...')
 
 
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
