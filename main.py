@@ -64,6 +64,7 @@ archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = todays_date + database_name + ".sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
+rotation_time = 10080        # 1 week
 
 def currentDir():
     """
@@ -96,7 +97,7 @@ def local_backup():
             os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
             os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
             os.system("mv " + zip_archive + " " + target_dir)
-            os.system("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+            os.system("find /home/philippe/P6/backup/. -type f -mmin " + rotation_time + " -delete")
             print('Local backup successful ...')
             print('Backup rotation successful ...')
         else:
@@ -219,14 +220,13 @@ def restore_from_aws():
 def menu():
     print (banner() + """\033[96m
  [*] Manage your backup [*]
-   [1]--Local (first rule)
-   [2]--Remote (second rule)
-   [3]--AWS S3 Bucket (third rule)
-   [4]--3 rules
+   [1]--Local ONLY (first rule)
+   [2]--Remote ONLY (second rule)
+   [3]--AWS S3 Bucket ONLY (third rule)
+   [4]--3 RULES
    [5]--Restore from Local
    [6]--Restore from Distant
    [7]--Restore from AWS
-   [8]--Return current directory
    [0]--Exit
    \033[0m
  """)
@@ -252,8 +252,6 @@ elif choice == "5":
     restore_from_remote()
 elif choice == "6":
     restore_from_aws()
-elif choice == "7":
-    currentDir()
 elif choice == "0":
     os.system('clear'), sys.exit()
 elif choice == "":
