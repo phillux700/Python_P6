@@ -119,11 +119,12 @@ def remote_backup():
         sftp = paramiko.SFTPClient.from_transport(transport)
         print("Connection succesfully established ... ")
         path = "/home/philippe/P6/backup/"
-        localpath = "/var/www/wordpress/"
+        # localpath = "/var/www/wordpress/"
         sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
         sftp.close()
         transport.close()
         print('Remote backup successful ...')
+        os.system("rm /home/philippe/P6/backup/" + zip_archive)
 
     except paramiko.AuthenticationException:
         print('Failed')
