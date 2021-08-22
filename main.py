@@ -199,8 +199,17 @@ def restore_from_local():
     """
         Fonction permettant de faire une restauration depuis le serveur local
     """
-    restore_local = print("restore local")
-    return restore_local
+    #restore_local = print("restore local")
+    #return restore_local
+    backups = os.listdir("/home/philippe/P6/backup")
+    number = 0
+    while number < len(backups):
+        print(number + 1 + ". backup\n")
+
+    backup_choice = input(show_input())
+    print("T'as choisi " + backup_choice)
+
+
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 def restore_from_remote():
@@ -222,6 +231,9 @@ def restore_from_aws():
 
 # Affichage du menu
 def menu():
+    """
+        Fonction permettant d'afficher le menu'
+    """
     print (banner() + """\033[96m
  [*] Manage your backup [*]
    [1]--Local ONLY (first rule)
