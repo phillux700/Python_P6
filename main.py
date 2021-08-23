@@ -225,27 +225,13 @@ def restore_from_local():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    #ssh_session = ssh.get_transport().open_session()
     ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
     os.system("sleep 5")
     print('File extraction successful')
     ssh.exec_command("rm /var/www/html/" + file_to_restore)
     ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
     os.system("sleep 3")
-    #ssh.exec_command("rm /var/www/html/*.sql")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
-
-    #file = ssh.exec_command("ls /var/www/html/")
-    #print(str(file[0]))
-    #ssh.exec_command("mv /var/www/html/" + str(file[0]) + "/* /var/www/html")
-    #ssh_session = ssh.get_transport().open_session()
-    #ssh_session.exec_command("rm -R /home/philippe/P6/backup/" + file_to_restore)
-    #ssh_session = ssh.get_transport().open_session()
-    #ssh_session.exec_command("sudo cp -rf /home/philippe/P6/backup/* /var/www/html/")
-
-
-    #ssh.exec_command("rm -R /home/philippe/P6/backup/*")
-
     ssh.close()
 
 
@@ -274,8 +260,7 @@ def restore_from_remote():
     transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
-    path = "/home/philippe/P6/backup/"
-    sftp.put("/home/philippe/P6/backup/" + file_to_restore, path + file_to_restore)
+    sftp.put("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
     sftp.close()
     transport.close()
     print('File has been sent ...')
