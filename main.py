@@ -232,7 +232,7 @@ def restore_from_local():
     ssh.exec_command("rm /var/www/html/" + file_to_restore)
     ssh.exec_command("sudo mysql -u philippe -p password wordpress_db < dump.sql")
     os.system("sleep 3")
-    ssh.exec_command("rm /var/www/html/*.sql")
+    #ssh.exec_command("rm /var/www/html/*.sql")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
 
     #file = ssh.exec_command("ls /var/www/html/")
