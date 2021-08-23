@@ -245,25 +245,35 @@ def restore_from_remote():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.2.2', username=username, password=password)
-    backups = ssh.exec_command("ls /home/philippe/P6/backup")
-    number = 0
-    while number < len(backups):
-        number = number + 1
-        print(str(number) + ". " + backups[number - 1] + "\n")
+    output = ""
+    stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
+    stdout = stdout.readlines()
+    #number = 0
+    #while number < len(backups):
+    #    number = number + 1
 
-    backup_choice = input(show_input())
-    file_to_restore = backups[int(backup_choice) - 1]
-    print("Vous avez choisi la sauvegarde " + file_to_restore)
+    #    print(str(number) + ". " + backups[number - 1] + "\n")
+
+    #backup_choice = input(show_input())
+    #file_to_restore = backups[int(backup_choice) - 1]
+    #print("Vous avez choisi la sauvegarde " + file_to_restore)
     ssh.close()
 
-    transport = paramiko.Transport(("192.168.1.4", 22))
-    transport.connect(username=username, password=password)
-    sftp = paramiko.SFTPClient.from_transport(transport)
-    print("Connection succesfully established ... ")
-    sftp.put("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
-    sftp.close()
-    transport.close()
-    print('File has been sent ...')
+    print(stdout)
+    for line in stdout:
+        output = output + line
+    if output != "":
+        print(output)
+    else:
+        print("There was no output for this command")
+    #transport = paramiko.Transport(("192.168.1.4", 22))
+    #transport.connect(username=username, password=password)
+    #sftp = paramiko.SFTPClient.from_transport(transport)
+    #print("Connection succesfully established ... ")
+    #sftp.put("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
+    #sftp.close()
+    #transport.close()
+    #print('File has been sent ...')
     #### TODO Vérifier que la liste des fichiers s'affiche, que je peux choisir le fichier, l'envoyer sur le serveur et faire la restauration
 
 def restore_from_aws():
