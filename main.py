@@ -260,10 +260,14 @@ def restore_from_remote():
     ssh.close()
 
     print(stdout)
+    number = 0
     for line in stdout:
         output = output + line
     if output != "":
-        print(output)
+        while number < len(stdout):
+            number = number + 1
+            print(str(number) + ". " + output + "\n")
+        #print(output)
     else:
         print("There was no output for this command")
     #transport = paramiko.Transport(("192.168.1.4", 22))
