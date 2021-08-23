@@ -248,15 +248,6 @@ def restore_from_remote():
     output = ""
     stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
     stdout = stdout.readlines()
-    #number = 0
-    #while number < len(backups):
-    #    number = number + 1
-
-    #    print(str(number) + ". " + backups[number - 1] + "\n")
-
-    #backup_choice = input(show_input())
-    #file_to_restore = backups[int(backup_choice) - 1]
-    #print("Vous avez choisi la sauvegarde " + file_to_restore)
     ssh.close()
 
     print("Quelle sauvegarde choisissez-vous ?")
@@ -281,7 +272,7 @@ def restore_from_remote():
     #sftp.close()
     #transport.close()
     #print('File has been sent ...')
-    #### TODO Vérifier que la liste des fichiers s'affiche, que je peux choisir le fichier, l'envoyer sur le serveur et faire la restauration
+    #### TODO Vérifier que je peux envoyer sur le serveur et faire la restauration
 
 def restore_from_aws():
     """
