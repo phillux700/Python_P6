@@ -230,8 +230,10 @@ def restore_from_local():
     print('File extraction successful')
     ssh.exec_command("mysql -u philippe -p password wordpress_db < /home/philippe/P6/backup/*.sql")
     ssh.exec_command("rm /home/philippe/P6/backup/*.sql")
-    #ssh.exec_command("cp /home/philippe/P6/backup/* /var/www/html/ -R")
-    #ssh.exec_command("rm -R /home/philippe/P6/backup/*")
+    ssh.exec_command("rm -R /home/philippe/P6/backup/" + file_to_restore)
+    ssh.exec_command("cd 20* && cp /home/philippe/P6/backup/* /var/www/html/ -R")
+    ssh.exec_command("rm -R /home/philippe/P6/backup/*")
+
     ssh.close()
 
 
