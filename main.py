@@ -259,7 +259,7 @@ def restore_from_remote():
     #print("Vous avez choisi la sauvegarde " + file_to_restore)
     ssh.close()
 
-    #print(stdout)
+    print("Quelle sauvegarde choisissez-vous ?")
     number = 0
     for line in stdout:
         output = output + line
@@ -269,6 +269,10 @@ def restore_from_remote():
             print(str(number) + ". " + line + "\n")
     else:
         print("There was no output for this command")
+
+    backup_choice = input(show_input())
+    file_to_restore = stdout[int(backup_choice) - 1]
+    print("Vous avez choisi la sauvegarde " + file_to_restore)
     #transport = paramiko.Transport(("192.168.1.4", 22))
     #transport.connect(username=username, password=password)
     #sftp = paramiko.SFTPClient.from_transport(transport)
