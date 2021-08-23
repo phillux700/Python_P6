@@ -249,7 +249,7 @@ def restore_from_remote():
     number = 0
     while number < len(backups):
         number = number + 1
-        print(str(number) + ". " + backups[number - 1] + "\n")
+        print(str(number) + ". " + str(backups[number - 1]) + "\n")
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
