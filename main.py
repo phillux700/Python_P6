@@ -233,7 +233,7 @@ def restore_from_local():
     ssh.exec_command("rm /var/www/html/*.sql")
     ssh.exec_command("rm /var/www/html/*.sql")
     file = ssh.exec_command("ls /var/www/html/")
-    ssh.exec_command("mv /var/www/html/" + file + "/* /var/www/html")
+    ssh.exec_command("mv /var/www/html/" + file[0] + "/* /var/www/html")
     #ssh_session = ssh.get_transport().open_session()
     #ssh_session.exec_command("rm -R /home/philippe/P6/backup/" + file_to_restore)
     #ssh_session = ssh.get_transport().open_session()
