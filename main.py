@@ -225,6 +225,7 @@ def restore_from_local():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.1.4', username=username, password=password)
+    transport = ssh.get_transport()
     session = transport.open_session()
     session.set_combine_stderr(True)
     session.get_pty()
