@@ -226,6 +226,7 @@ def restore_from_local():
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.1.4', username=username, password=password)
     ssh.exec_command("tar -xzvf /home/philippe/P6/backup/" + file_to_restore)
+    os.system("sleep 5")
     print('File extraction successful')
     ssh.close()
 
