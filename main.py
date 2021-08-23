@@ -259,7 +259,7 @@ def restore_from_remote():
     #print("Vous avez choisi la sauvegarde " + file_to_restore)
     ssh.close()
 
-    print(stdout)
+    #print(stdout)
     number = 0
     for line in stdout:
         output = output + line
@@ -267,7 +267,6 @@ def restore_from_remote():
         while number < len(stdout):
             number = number + 1
             print(str(number) + ". " + output + "\n")
-        #print(output)
     else:
         print("There was no output for this command")
     #transport = paramiko.Transport(("192.168.1.4", 22))
