@@ -220,12 +220,13 @@ def restore_from_local():
     sftp.put("/home/philippe/P6/backup/" + file_to_restore, path + file_to_restore)
     sftp.close()
     transport.close()
+    os.system("sleep 5")
     print('File has been sent ...')
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    ssh.exec_command("tar -xzvf /home/philippe/P6/backup/" + file_to_restore + " -C /home/philippe/P6/backup && sleep 5")
+    ssh.exec_command("tar -xzvf /home/philippe/P6/backup/" + file_to_restore + " -C /home/philippe/P6/backup")
     print('File extraction successful')
     ssh.close()
 
