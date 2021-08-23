@@ -50,7 +50,8 @@ username = 'philippe'
 password = 'password'
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
-archive_db = todays_date + database_name + ".sql"
+# archive_db = todays_date + database_name + ".sql"
+archive_db = "dump.sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 rotation_time = '60'        # 1 week = 10080, 1 day = 1440
 
@@ -229,7 +230,7 @@ def restore_from_local():
     os.system("sleep 5")
     print('File extraction successful')
     ssh.exec_command("rm /var/www/html/" + file_to_restore)
-    ssh.exec_command("sudo mysql -u philippe -p password wordpress_db < /var/www/html/*.sql")
+    ssh.exec_command("sudo mysql -u philippe -p password wordpress_db < dump.sql")
     os.system("sleep 3")
     ssh.exec_command("rm /var/www/html/*.sql")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
