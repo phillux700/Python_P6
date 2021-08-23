@@ -232,7 +232,7 @@ def restore_from_local():
     ssh.exec_command("rm /home/philippe/P6/backup/*.sql")
     ssh.exec_command("rm -R /home/philippe/P6/backup/" + file_to_restore)
     ssh.exec_command("cd 20* && cp /home/philippe/P6/backup/20*/* /var/www/html/ -R")
-    ssh.exec_command("rm -R /home/philippe/P6/backup/*")
+    #ssh.exec_command("rm -R /home/philippe/P6/backup/*")
 
     ssh.close()
 
