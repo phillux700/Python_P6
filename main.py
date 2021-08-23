@@ -225,7 +225,7 @@ def restore_from_local():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    ssh.exec_command("sudo tar -xzvf /home/philippe/P6/backup/" + file_to_restore + " -C /var/www/html/")
+    ssh.exec_command("sudo chmod 775 -R /var/www/html && sudo tar -xzvf /home/philippe/P6/backup/" + file_to_restore + " -C /var/www/html/")
     os.system("sleep 5")
     print('File extraction successful')
     #ssh.exec_command("mysql -u philippe -p password wordpress_db < /home/philippe/P6/backup/*.sql")
