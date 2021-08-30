@@ -284,7 +284,7 @@ def restore_from_remote():
         if backup.startswith('2021'):
             while number < len(backups):
                 number = number + 1
-                print(str(number) + ". " + filename[number - 1])
+                print(str(number) + ". " + backup[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
@@ -313,7 +313,6 @@ def restore_from_remote():
     #print(" philippe@192.168.1.4:/var/www/html")
     #ssh.exec_command("sleep 5")
     #os.system("sleep 5")
-    ssh.close()
 
     #ssh = paramiko.SSHClient()
     #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
