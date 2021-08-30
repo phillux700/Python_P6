@@ -267,7 +267,11 @@ def restore_from_remote():
     print("Vous avez choisi la sauvegarde " + file_to_restore)
     print(file_to_restore)
     sftp = ssh.open_sftp()
-    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
+    localFile = "/home/philippe/P6/backup/" + file_to_restore
+    if os.path.isfile(localFile):
+        sftp.get(localFile, "/home/philippe/P6/tmp/" + file_to_restore)
+    else:
+        raise IOError('Could not find localFile %s !!' % localFile)
     sftp.close()
 
     #with SCPClient(ssh.get_transport()) as scp:
