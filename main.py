@@ -279,6 +279,7 @@ def restore_from_remote():
     path = "/home/philippe/P6/backup/"
     os.system("touch " + path + file_to_restore)
     sftp.get(path + file_to_restore, "/home/philippe/P6/tmp/remote.tar.gz")
+    print(path + file_to_restore)
     sftp.close()
     transport.close()
 
