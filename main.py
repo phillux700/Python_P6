@@ -21,7 +21,6 @@ import paramiko
 import boto3
 import botocore
 import tqdm
-from scp import SCPClient
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -275,7 +274,7 @@ def restore_from_remote():
     #    scp.put(file_to_restore, '/home/philippe/P6/')
     #    #scp.get(file_to_restore)
 
-    os.system("sshpass -e sudo scp -r -p -v philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
+    os.system("sshpass -e scp -r -p -v philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
