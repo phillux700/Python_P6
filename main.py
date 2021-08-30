@@ -259,14 +259,18 @@ def restore_from_remote():
             \033[0m
         """)
     number = 0
-    for line in stdout:
-        output = output + line
-    if output != "":
-        while number < len(stdout):
-            number = number + 1
-            print(str(number) + ". " + line)
-    else:
-        print("There was no output for this command")
+    #for line in stdout:
+    #    output = output + line
+    #if output != "":
+    #    while number < len(stdout):
+    #        number = number + 1
+    #        print(str(number) + ". " + line)
+    #else:
+    #    print("There was no output for this command")
+
+    while number < len(stdout):
+        number = number + 1
+        print(str(number) + ". " + stdout[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = stdout[int(backup_choice) - 1]
