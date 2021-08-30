@@ -270,7 +270,7 @@ def restore_from_remote():
     localFile = "/home/philippe/P6/backup/" + file_to_restore
     os.system("touch " + localFile)
     if os.path.isfile(localFile):
-        sftp.get("/home/philippe/P6/tmp/" + file_to_restore, localFile)
+        sftp.get(localFile, "/home/philippe/P6/tmp/" + file_to_restore, confirm=False)
     else:
         raise IOError('Could not find localFile %s !!' % localFile)
     sftp.close()
