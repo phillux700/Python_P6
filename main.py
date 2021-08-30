@@ -270,7 +270,7 @@ def restore_from_remote():
     sftp.chdir('/home/philippe/P6/backup')
     for filename in sorted(sftp.listdir()):
         if filename.startswith('202'):
-            sftp.get(filename, filename)
+            sftp.get("/tmp/" + filename, filename)
     #localFile = "/home/philippe/P6/tmp/" + file_to_restore
     #os.system("touch " + localFile)
     #if os.path.isfile(localFile):
