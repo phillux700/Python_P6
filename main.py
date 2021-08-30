@@ -248,37 +248,46 @@ def restore_from_remote():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.2.2', username=username, password=password)
-    output = ""
-    stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
-    stdout = stdout.readlines()
-    print(stdout)
+    #stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
+    #stdout = stdout.readlines()
+    #print(stdout)
 
+    #print("""\033[96m
+    #        Quelle sauvegarde choisissez-vous ?
+    #        \033[0m
+    #    """)
+    #number = 0
+    #while number < len(stdout):
+    #    number = number + 1
+    #    print(str(number) + ". " + stdout[number - 1])
+
+    #backup_choice = input(show_input())
+    #file_to_restore = stdout[int(backup_choice) - 1]
+    #print("Vous avez choisi la sauvegarde " + file_to_restore)
+    #print(file_to_restore)
+    sftp = ssh.open_sftp()
+
+    sftp.chdir('/home/philippe/P6/backup')
+    for filename in sorted(sftp.listdir()):
+        if filename.startswith('202'):
+            sftp.get(filename, filename)
+    ssh.close()
+
+    backups = os.listdir("/home/philippe/P6")
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
     number = 0
-    while number < len(stdout):
-        number = number + 1
-        print(str(number) + ". " + stdout[number - 1])
+    for backup in backups:
+        if "2021" in backup:
+            while number < len(backups):
+                number = number + 1
+                print(str(number) + ". " + backups[number - 1])
 
     backup_choice = input(show_input())
-    file_to_restore = stdout[int(backup_choice) - 1]
+    file_to_restore = backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
-    print(file_to_restore)
-    sftp = ssh.open_sftp()
-    sftp.chdir('/home/philippe/P6/backup')
-    for filename in sorted(sftp.listdir()):
-        if filename.startswith('202'):
-            sftp.get("/tmp/" + filename, filename)
-    #localFile = "/home/philippe/P6/tmp/" + file_to_restore
-    #os.system("touch " + localFile)
-    #if os.path.isfile(localFile):
-    #    sftp.get(localpath=localFile, remotepath="/home/philippe/P6/tmp/" + file_to_restore, confirm=False)
-    #else:
-    #    raise IOError('Could not find localFile %s !!' % localFile)
-    #sftp.close()
-    ssh.close()
 
     #transport = paramiko.Transport(("192.168.2.2", 22))
     #transport.connect(username=username, password=password)
