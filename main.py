@@ -21,7 +21,6 @@ import paramiko
 import boto3
 import botocore
 import tqdm
-import scp
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
