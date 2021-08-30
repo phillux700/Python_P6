@@ -251,6 +251,7 @@ def restore_from_remote():
     output = ""
     stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
     stdout = stdout.readlines()
+    ssh.close()
 
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
@@ -273,6 +274,9 @@ def restore_from_remote():
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
     #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + "philippe@192.168.1.4:/var/www/html")
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname='192.168.2.2', username=username, password=password)
     hostname = ssh.exec_command("hostname")
     print(hostname)
     os.system("sleep 5")
