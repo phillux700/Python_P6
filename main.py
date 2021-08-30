@@ -269,15 +269,19 @@ def restore_from_remote():
     backup_choice = input(show_input())
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
+    ssh.close()
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
-    ssh.exec_command("sudo sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname='192.168.2.2', username=username, password=password)
+    ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
     #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + "philippe@192.168.1.4:/var/www/html")
     #hostname = ssh.exec_command("hostname")
     #print(hostname)
     os.system("sleep 5")
-    ssh.exec_command("sleep 5")
     ssh.close()
+
 
     #ssh = paramiko.SSHClient()
     #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
