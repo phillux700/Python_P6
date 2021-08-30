@@ -266,15 +266,16 @@ def restore_from_remote():
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
     print(file_to_restore)
-    #sftp = ssh.open_sftp()
-    #sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
-    #sftp.close()
+    sftp = ssh.open_sftp()
+    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
+    sftp.close()
 
     #with SCPClient(ssh.get_transport()) as scp:
     #    scp.put(file_to_restore, '/home/philippe/P6/')
     #    #scp.get(file_to_restore)
 
-    os.system("sshpass -p password scp -r -p -v philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
+    #os.system("sshpass -p password scp -r -p -v philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
+
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
