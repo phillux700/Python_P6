@@ -269,13 +269,24 @@ def restore_from_remote():
     backup_choice = input(show_input())
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
+
+    ssh.close()
+
+    transport = paramiko.Transport(("192.168.2.2", 22))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    print("Connection succesfully established ... ")
+    path = "/home/philippe/P6/backup/"
+    sftp.put("/home/philippe/P6/tmp/" + file_to_restore, path + file_to_restore)
+    sftp.close()
+    transport.close()
+
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
-    ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
+    #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
     #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + "philippe@192.168.1.4:/var/www/html")
-    ssh.exec_command("sleep 5")
-    os.system("sleep 5")
-    ssh.close()
+    #ssh.exec_command("sleep 5")
+    #os.system("sleep 5")
 
 
     #ssh = paramiko.SSHClient()
