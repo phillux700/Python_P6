@@ -281,11 +281,10 @@ def restore_from_remote():
         """)
     pattern = '*.tar.gz'
     number = 0
-    for backup in backups:
-        for filename in fnmatch.filter(backup, pattern):
+    for backup in fnmatch.filter(backups, pattern):
             while number < len(backups):
                 number = number + 1
-                print(str(number) + ". " + filename[number - 1])
+                print(str(number) + ". " + backup[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
