@@ -270,18 +270,12 @@ def restore_from_remote():
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
+    sftp = ssh.open_sftp()
+    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
+    sftp.close()
     ssh.close()
 
-    transport = paramiko.Transport(("192.168.2.2", 22))
-    transport.connect(username=username, password=password)
-    sftp = paramiko.SFTPClient.from_transport(transport)
-    print("Connection succesfully established ... ")
-    path = "/home/philippe/P6/backup/"
-    os.system("touch " + path + file_to_restore)
-    sftp.get(path + file_to_restore, "/home/philippe/P6/tmp/remote.tar.gz")
-    print(path + file_to_restore)
-    sftp.close()
-    transport.close()
+
 
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
