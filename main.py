@@ -284,7 +284,7 @@ def restore_from_remote():
         if backup.endswith('.tar.gz'):
             while number < len(backups):
                 number = number + 1
-                print(str(number) + ". " + backup)
+                print(str(number) + ". " + backup[number])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
