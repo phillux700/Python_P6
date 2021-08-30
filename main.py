@@ -133,7 +133,7 @@ def rotate_remote():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.2.2', username=username, password=password)
-    ssh.exec_command("find /home/philippe/P6/backup/. -type f -mmin +5 -delete")
+    ssh.exec_command("find /home/philippe/P6/backup/. -type f +" + rotation_time + " -delete")
     print('Remote backup rotation successful ...')
     ssh.close()
 
@@ -203,11 +203,14 @@ def restore_from_local():
     """
 
     backups = os.listdir("/home/philippe/P6/backup")
-    print("Quelle sauvegarde choisissez-vous ?")
+    print("""\033[96m
+        Quelle sauvegarde choisissez-vous ?
+        \033[0m
+    """ + "\n")
     number = 0
     while number < len(backups):
         number = number + 1
-        print(str(number) + ". " + backups[number - 1] + "\n")
+        print(str(number) + ". " + backups[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
@@ -249,8 +252,10 @@ def restore_from_remote():
     stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
     stdout = stdout.readlines()
 
-
-    print("Quelle sauvegarde choisissez-vous ?")
+    print("""\033[96m
+            Quelle sauvegarde choisissez-vous ?
+            \033[0m
+        """ + "\n")
     number = 0
     for line in stdout:
         output = output + line
@@ -264,7 +269,8 @@ def restore_from_remote():
     backup_choice = input(show_input())
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
-    ssh.exec_command("sftp philippe@192.168.1.2:/home/philippe/P6 <<< $'put " + "/home/philippe/P6/backup/" + file_to_restore + "'")
+    ssh.exec_command("sftp philippe@192.168.1.4:/home/philippe/P6 <<< $'put " + "/home/philippe/P6/backup/" + file_to_restore + "'")
+    #### TODO Régler le pb de password, vérifier que le serveur wordpress reçoive le fichier
     ssh.exec_command("sleep 5")
     ssh.close()
     #transport = paramiko.Transport(("192.168.1.4", 22))
