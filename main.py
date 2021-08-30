@@ -280,10 +280,10 @@ def restore_from_remote():
     ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
     os.system("sleep 5")
     print('File extraction successful')
-    ssh.exec_command("rm /var/www/html/" + file_to_restore)
-    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    #ssh.exec_command("rm /var/www/html/" + file_to_restore)
+    #ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
     os.system("sleep 3")
-    ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
+    #ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
     ssh.close()
     #### TODO Vérifier que je peux envoyer sur le serveur et faire la restauration
 
