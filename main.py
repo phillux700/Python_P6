@@ -269,11 +269,19 @@ def restore_from_remote():
     sftp = ssh.open_sftp()
     localFile = "/home/philippe/P6/backup/" + file_to_restore
     os.system("touch " + localFile)
-    if os.path.isfile(localFile):
-        sftp.get(localpath=localFile, remotepath="/home/philippe/P6/tmp/" + file_to_restore, confirm=False)
-    else:
-        raise IOError('Could not find localFile %s !!' % localFile)
+    #if os.path.isfile(localFile):
+    #    sftp.get(localpath=localFile, remotepath="/home/philippe/P6/tmp/" + file_to_restore, confirm=False)
+    #else:
+    #    raise IOError('Could not find localFile %s !!' % localFile)
+    #sftp.close()
+    ssh.close()
+    transport = paramiko.Transport(("192.168.2.2", 22))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    print("Connection succesfully established ... ")
+    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
     sftp.close()
+    transport.close()
 
     #with SCPClient(ssh.get_transport()) as scp:
     #    scp.put(file_to_restore, '/home/philippe/P6/')
