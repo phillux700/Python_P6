@@ -263,7 +263,7 @@ def restore_from_remote():
     if output != "":
         while number < len(stdout):
             number = number + 1
-            print(str(number) + ". " + line + "\n")
+            print(str(number) + ". " + line)
     else:
         print("There was no output for this command")
 
