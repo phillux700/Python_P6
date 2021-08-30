@@ -279,12 +279,14 @@ def restore_from_remote():
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
+    rootPath = '/home/philippe/P6'
     pattern = '*.tar.gz'
     number = 0
-    for backup in fnmatch.filter(backups, pattern):
-            while number < len(backups):
+    for backup in os.walk(rootPath):
+        for filename in fnmatch.filter(backup, pattern):
+            while number < len(fnmatch.filter(backup, pattern)):
                 number = number + 1
-                print(str(number) + ". " + backup[number - 1])
+                print(str(number) + ". " + filename[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
