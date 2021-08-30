@@ -271,17 +271,16 @@ def restore_from_remote():
     sftp.chdir('/home/philippe/P6/backup')
     for filename in sorted(sftp.listdir()):
         if filename.startswith('202'):
-            sftp.get(filename, filename)
+            sftp.get("home/philippe/P6/tmp/" + filename, filename)
     ssh.close()
 
-    backups = os.listdir("/home/philippe/P6")
+    backups = os.listdir("/home/philippe/P6/tmp")
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
     number = 0
     for backup in backups:
-        if backup.startswith('2021'):
             while number < len(backups):
                 number = number + 1
                 print(str(number) + ". " + backup[number - 1])
