@@ -259,15 +259,6 @@ def restore_from_remote():
             \033[0m
         """)
     number = 0
-    #for line in stdout:
-    #    output = output + line
-    #if output != "":
-    #    while number < len(stdout):
-    #        number = number + 1
-    #        print(str(number) + ". " + line)
-    #else:
-    #    print("There was no output for this command")
-
     while number < len(stdout):
         number = number + 1
         print(str(number) + ". " + stdout[number - 1])
@@ -284,7 +275,7 @@ def restore_from_remote():
     #    scp.put(file_to_restore, '/home/philippe/P6/')
     #    #scp.get(file_to_restore)
 
-    os.system("sshpass -e scp philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
+    os.system("sshpass -e scp -r philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
