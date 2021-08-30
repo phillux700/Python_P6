@@ -274,7 +274,7 @@ def restore_from_remote():
             sftp.get(filename, filename)
     ssh.close()
 
-    backups = os.listdir("/home/philippe/P6/tmp")
+    backups = os.listdir("/home/philippe/P6")
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
