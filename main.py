@@ -269,19 +269,22 @@ def restore_from_remote():
     backup_choice = input(show_input())
     file_to_restore = stdout[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
-    ssh.exec_command("sftp philippe:password@192.168.1.4:/home/philippe/P6/backup <<< $'put " + "/home/philippe/P6/backup/" + file_to_restore + "'")
-    #### TODO Régler le pb de password, vérifier que le serveur wordpress reçoive le fichier
+    ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/home/philippe/P6/backup <<< $'put " + "/var/www/html/" + file_to_restore + "'")
     os.system("sleep 5")
     ssh.exec_command("sleep 5")
     ssh.close()
-    #transport = paramiko.Transport(("192.168.1.4", 22))
-    #transport.connect(username=username, password=password)
-    #sftp = paramiko.SFTPClient.from_transport(transport)
-    #print("Connection succesfully established ... ")
-    #sftp.put("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
-    #sftp.close()
-    #transport.close()
-    #print('File has been sent ...')
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname='192.168.1.4', username=username, password=password)
+    ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
+    os.system("sleep 5")
+    print('File extraction successful')
+    ssh.exec_command("rm /var/www/html/" + file_to_restore)
+    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    os.system("sleep 3")
+    ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
+    ssh.close()
     #### TODO Vérifier que je peux envoyer sur le serveur et faire la restauration
 
 def restore_from_aws():
