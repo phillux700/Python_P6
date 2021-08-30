@@ -277,7 +277,7 @@ def restore_from_remote():
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
     path = "/home/philippe/P6/backup/"
-    sftp.get("/home/philippe/P6/tmp/" + file_to_restore, path + file_to_restore)
+    sftp.get(path + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
     sftp.close()
     transport.close()
 
