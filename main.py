@@ -249,23 +249,6 @@ def restore_from_remote():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname='192.168.2.2', username=username, password=password)
-    #stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
-    #stdout = stdout.readlines()
-    #print(stdout)
-
-    #print("""\033[96m
-    #        Quelle sauvegarde choisissez-vous ?
-    #        \033[0m
-    #    """)
-    #number = 0
-    #while number < len(stdout):
-    #    number = number + 1
-    #    print(str(number) + ". " + stdout[number - 1])
-
-    #backup_choice = input(show_input())
-    #file_to_restore = stdout[int(backup_choice) - 1]
-    #print("Vous avez choisi la sauvegarde " + file_to_restore)
-    #print(file_to_restore)
     sftp = ssh.open_sftp()
 
     sftp.chdir('/home/philippe/P6/backup')
@@ -288,44 +271,29 @@ def restore_from_remote():
         print(str(number) + ". " + filtered_backups[number - 1])
 
     backup_choice = input(show_input())
-    file_to_restore = backups[int(backup_choice) - 1]
+    file_to_restore = filtered_backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    #transport = paramiko.Transport(("192.168.2.2", 22))
-    #transport.connect(username=username, password=password)
-    #sftp = paramiko.SFTPClient.from_transport(transport)
-    #print("Connection succesfully established ... ")
-    #print(localFile)
-    #sftp.get(localFile, "/home/philippe/P6/tmp/" + file_to_restore)
-    #time.sleep(3)
-    #sftp.close()
-    #transport.close()
+    transport = paramiko.Transport(("192.168.1.4", 22))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    print("Connection succesfully established ... ")
+    sftp.put("/home/philippe/P6/" + file_to_restore, "/var/www/html/" + file_to_restore)
+    sftp.close()
+    transport.close()
+    print('File has been sent ...')
 
-    #with SCPClient(ssh.get_transport()) as scp:
-    #    scp.put(file_to_restore, '/home/philippe/P6/')
-    #    #scp.get(file_to_restore)
-
-    #os.system("sshpass -p password scp -r -p -v philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " /home/philippe/P6/tmp/")
-
-    #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
-    #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
-    #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
-    #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore)
-    #print(" philippe@192.168.1.4:/var/www/html")
-    #ssh.exec_command("sleep 5")
-    #os.system("sleep 5")
-
-    #ssh = paramiko.SSHClient()
-    #ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    #ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
-    #os.system("sleep 5")
-    #print('File extraction successful')
-    #ssh.exec_command("rm /var/www/html/" + file_to_restore)
-    #ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
-    #os.system("sleep 3")
-    #ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
-    #ssh.close()
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname='192.168.1.4', username=username, password=password)
+    ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
+    os.system("sleep 5")
+    print('File extraction successful')
+    ssh.exec_command("rm /var/www/html/" + file_to_restore)
+    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    os.system("sleep 3")
+    ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
+    ssh.close()
     #### TODO Vérifier que je peux envoyer sur le serveur et faire la restauration
 
 def restore_from_aws():
