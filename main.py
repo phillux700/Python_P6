@@ -271,7 +271,7 @@ def restore_from_remote():
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
     sftp = ssh.open_sftp()
-    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/remote.tar.gz")
+    sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
     sftp.close()
     ssh.close()
 
