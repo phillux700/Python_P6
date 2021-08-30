@@ -238,9 +238,6 @@ def restore_from_local():
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
     ssh.close()
 
-
-    #### TODO Le fichier est envoyé: il reste la restauration à faire
-
 def restore_from_remote():
     """
         Fonction permettant de faire une restauration depuis le serveur distant
@@ -294,14 +291,20 @@ def restore_from_remote():
     os.system("sleep 3")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
     ssh.close()
-    #### TODO Vérifier que je peux envoyer sur le serveur et faire la restauration
+
+    os.system("rm -f 2021*")
 
 def restore_from_aws():
     """
         Fonction permettant de faire une restauration depuis le bucket S3 AWS
     """
-    restore_aws = print("restore aws")
-    return restore_aws
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
+        aws_secret_access_key="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"
+    )
+    for key in s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']:
+        print(key['Key'])
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 
