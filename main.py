@@ -281,8 +281,8 @@ def restore_from_remote():
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
     #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + "philippe@192.168.1.4:/var/www/html")
-    #ssh.exec_command("sleep 5")
-    #os.system("sleep 5")
+    ssh.exec_command("sleep 5")
+    os.system("sleep 5")
     ssh.close()
 
     #ssh = paramiko.SSHClient()
