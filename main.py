@@ -21,6 +21,7 @@ import paramiko
 import boto3
 import botocore
 import tqdm
+import fnmatch
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -278,9 +279,10 @@ def restore_from_remote():
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
+    pattern = '*.tar.gz'
     number = 0
     for backup in backups:
-        if "2021" in backup:
+        for filename in fnmatch.filter(backups, pattern):
             while number < len(backups):
                 number = number + 1
                 print(str(number) + ". " + backups[number - 1])
