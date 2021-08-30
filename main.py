@@ -279,7 +279,7 @@ def restore_from_remote():
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
-    rootPath = '/home/philippe/P6'
+    rootPath = '/home/philippe/P6/'
     pattern = '*.tar.gz'
     number = 0
     for backup in os.walk(rootPath):
