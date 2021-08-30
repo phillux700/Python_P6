@@ -276,7 +276,7 @@ def restore_from_remote():
     #sftp.close()
 
     with SCPClient(ssh.get_transport()) as scp:
-        scp.put(file_to_restore, '/home/philippe/P6/tmp/remote.tar.gz')
+        scp.put(file_to_restore, '/home/philippe/P6/')
         #scp.get(file_to_restore)
 
 
