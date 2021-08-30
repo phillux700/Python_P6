@@ -271,7 +271,7 @@ def restore_from_remote():
     sftp.chdir('/home/philippe/P6/backup')
     for filename in sorted(sftp.listdir()):
         if filename.startswith('202'):
-            sftp.get("home/philippe/P6/tmp/" + filename, filename)
+            sftp.get(filename, filename)
     ssh.close()
 
     backups = os.listdir("/home/philippe/P6/tmp")
@@ -281,6 +281,7 @@ def restore_from_remote():
         """)
     number = 0
     for backup in backups:
+        if backup.endswith('.tar.gz'):
             while number < len(backups):
                 number = number + 1
                 print(str(number) + ". " + backup[number - 1])
