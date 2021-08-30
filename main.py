@@ -275,11 +275,11 @@ def restore_from_remote():
     #sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
     #sftp.close()
 
-    with SCPClient(ssh.get_transport()) as scp:
-        scp.put(file_to_restore, '/home/philippe/P6/')
-        #scp.get(file_to_restore)
+    #with SCPClient(ssh.get_transport()) as scp:
+    #    scp.put(file_to_restore, '/home/philippe/P6/')
+    #    #scp.get(file_to_restore)
 
-
+    os.system("sshpass -e scp philippe@192.168.2.2:/home/philippe/P6/backup/" + file_to_restore + " philippe@localhost:/home/philippe/P6/tmp")
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
