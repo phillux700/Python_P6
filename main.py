@@ -207,7 +207,7 @@ def restore_from_local():
     print("""\033[96m
         Quelle sauvegarde choisissez-vous ?
         \033[0m
-    """ + "\n")
+    """)
     number = 0
     while number < len(backups):
         number = number + 1
@@ -252,11 +252,12 @@ def restore_from_remote():
     output = ""
     stdin, stdout, stderr = ssh.exec_command("ls /home/philippe/P6/backup")
     stdout = stdout.readlines()
+    print(stdout)
 
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
-        """ + "\n")
+        """)
     number = 0
     for line in stdout:
         output = output + line
