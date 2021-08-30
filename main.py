@@ -275,17 +275,17 @@ def restore_from_remote():
     ssh.close()
 
     backups = os.listdir("/home/philippe/P6")
+    filtered_backups = [backup for backup in backups if backup.startswith("2021")]
+    print(filtered_backups)
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
         """)
     number = 0
-    #for backup in backups:
 
-    while number < len(backups):
+    while number < len(filtered_backups):
         number = number + 1
-        if backups[number].endswith('.tar.gz'):
-            print(str(number) + ". " + backups[number - 1])
+        print(str(number) + ". " + filtered_backups[number - 1])
 
     backup_choice = input(show_input())
     file_to_restore = backups[int(backup_choice) - 1]
