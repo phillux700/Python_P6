@@ -267,7 +267,7 @@ def restore_from_remote():
     print("Vous avez choisi la sauvegarde " + file_to_restore)
     print(file_to_restore)
     sftp = ssh.open_sftp()
-    localFile = "/home/philippe/P6/backup/" + file_to_restore
+    localFile = "/home/philippe/P6/tmp/" + file_to_restore
     os.system("touch " + localFile)
     #if os.path.isfile(localFile):
     #    sftp.get(localpath=localFile, remotepath="/home/philippe/P6/tmp/" + file_to_restore, confirm=False)
