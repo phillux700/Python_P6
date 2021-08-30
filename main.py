@@ -281,6 +281,7 @@ def restore_from_remote():
     print("Connection succesfully established ... ")
     print(localFile)
     sftp.get(localFile, "/home/philippe/P6/tmp/" + file_to_restore)
+    time.sleep(3)
     sftp.close()
     transport.close()
 
