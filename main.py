@@ -21,6 +21,7 @@ import paramiko
 import boto3
 import botocore
 import tqdm
+from scp import SCPClient
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -274,16 +275,18 @@ def restore_from_remote():
     #sftp.get("/home/philippe/P6/backup/" + file_to_restore, "/home/philippe/P6/tmp/" + file_to_restore)
     #sftp.close()
 
-
+    with SCPClient(ssh.get_transport()) as scp:
+        #scp.put('test.txt', 'test2.txt')
+        scp.get(file_to_restore)
 
 
     #print("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
     #ssh.exec_command("sshpass -e sftp philippe@192.168.1.4:/var/www/html <<< $'put /home/philippe/P6/backup/'" + file_to_restore)
-    ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
-    print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore)
-    print(" philippe@192.168.1.4:/var/www/html")
-    ssh.exec_command("sleep 5")
-    os.system("sleep 5")
+    #ssh.exec_command("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore + " philippe@192.168.1.4:/var/www/html")
+    #print("sshpass -e scp /home/philippe/P6/backup/" + file_to_restore)
+    #print(" philippe@192.168.1.4:/var/www/html")
+    #ssh.exec_command("sleep 5")
+    #os.system("sleep 5")
     ssh.close()
 
     #ssh = paramiko.SSHClient()
