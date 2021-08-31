@@ -311,6 +311,14 @@ def restore_from_aws():
     backup_choice = input(show_input())
     file_to_restore = s3_objects[int(backup_choice) - 1]['Key']
     print(file_to_restore)
+
+    try:
+        s3_client.Bucket('p6-eu-west-1-bucket').download_file(file_to_restore, file_to_restore)
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print("The object does not exist.")
+        else:
+            raise
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 
