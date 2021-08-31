@@ -38,7 +38,7 @@ https://www.python.org/dev/peps/pep-0008/
 https://www.python.org/dev/peps/pep-0257/
 """
 
-# --- Variables --- #
+"""############### VARIABLES ####################"""
 backup_path = '/home/philippe/P6/backup/'
 wordpress_path = "/var/www/html/"
 source_directory = '/var/www/wordpress'
@@ -309,6 +309,10 @@ def restore_from_aws():
         aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
         aws_secret_access_key="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"
     )
+    print("""\033[96m
+        Quelle sauvegarde choisissez-vous ?
+        \033[0m
+    """)
     number = 0
     s3_objects = s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']
     for key in s3_objects:
