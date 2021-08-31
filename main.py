@@ -263,7 +263,7 @@ def restore_from_remote():
 
     backups = os.listdir("/home/philippe/P6")
     filtered_backups = [backup for backup in backups if backup.startswith("2021")]
-    print(filtered_backups)
+    # print(filtered_backups)
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
@@ -311,7 +311,7 @@ def restore_from_aws():
         aws_secret_access_key=aws_access_key_id
     )
     number = 0
-    s3_objects = s3_client.list_objects(Bucket=aws_bucket_name)['Contents']
+    s3_objects = s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']
     for key in s3_objects:
         number = number + 1
         print(str(number) + ". " + key['Key'])
