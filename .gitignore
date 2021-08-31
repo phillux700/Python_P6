@@ -130,3 +130,6 @@ dmypy.json
 
 # local directory
 .idea
+
+# sensitive data
+config.py

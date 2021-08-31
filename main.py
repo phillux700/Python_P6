@@ -21,6 +21,7 @@ import paramiko
 import boto3
 import botocore
 import tqdm
+import config
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -36,32 +37,29 @@ https://github.com/tqdm/tqdm
 https://www.python.org/dev/peps/pep-0020/
 https://www.python.org/dev/peps/pep-0008/
 https://www.python.org/dev/peps/pep-0257/
-"""
+##################################################"""
 
-"""############### VARIABLES ####################"""
+"""############### VARIABLES #####################"""
 backup_path = '/home/philippe/P6/backup/'
 wordpress_path = "/var/www/html/"
 source_directory = '/var/www/wordpress'
 todays_date = (time.strftime("%Y%m%d_%HH%M"))
-free_space_needed = 1000000
+free_space_needed = 1000000  # 1 Go
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
-target_dir = '/home/philippe/P6/backup/'
-username = 'philippe'
-password = 'password'
+#username = 'philippe'
+#password = 'password'
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = "dump.sql"
-archive_db_path = target_dir + todays_date + database_name + ".sql"
-rotation_time = '60'        # 1 week = 10080, 1 day = 1440
-
-files_hostname = '192.168.2.2'
-restore_hostname = '192.168.1.4'
-ssh_port = 22
-
-aws_access_key_id = "AKIA45Z5NIQTRLHR3RBA"
-aws_secret_access_key = "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"
-aws_bucket_name = 'p6-eu-west-1-bucket'
+archive_db_path = backup_path + todays_date + database_name + ".sql"
+rotation_time = '1440'  # 1 week = 10080, 1 day = 1440
+#files_hostname = '192.168.2.2'
+#restore_hostname = '192.168.1.4'
+#ssh_port = 22
+#aws_access_key_id = "AKIA45Z5NIQTRLHR3RBA"
+#aws_secret_access_key = "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"
+#aws_bucket_name = 'p6-eu-west-1-bucket'
 
 def banner():
     """
@@ -87,13 +85,13 @@ def local_backup():
         Fonction permettant de faire une sauvegarde sur le serveur local
     """
     try:
-        size = os.statvfs(target_dir)
+        size = os.statvfs(backup_path)
         free_space = (size.f_bavail * size.f_frsize) / 1024
         if free_space > free_space_needed:
-            os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ',' + " /var/www/wordpress")
-            os.system("mysqldump -u " + username + " -p" + password + " " + database_name + "  > " + archive_db)
+            os.system("tar -cvf " + archive + "/var/www/wordpress/*" + " --transform " + 's,^var/www/wordpress,' + todays_date + backup_site_name + ', ' + source_directory)
+            os.system("mysqldump -u " + config.username + " -p" + config.password + " " + database_name + "  > " + archive_db)
             os.system("tar -rf " + archive + archive_db + " && " + "rm " + archive_db + " && " + "gzip -9 " + archive)
-            os.system("mv " + zip_archive + " " + target_dir)
+            os.system("mv " + zip_archive + " " + backup_path)
             print('Local backup successful ...')
         else:
             print('Not enough space !')
@@ -104,7 +102,7 @@ def del_backup(zip_archive):
     """
         Fonction permettant de supprimer une sauvegarde sur le serveur local
     """
-    os.system("rm /home/philippe/P6/backup/" + zip_archive)
+    os.system("rm " + backup_path + zip_archive)
 
 def remote_backup():
     """
@@ -114,8 +112,8 @@ def remote_backup():
         https://blog.ruanbekker.com/blog/2018/04/23/using-paramiko-module-in-python-to-execute-remote-bash-commands/
     """
     try:
-        transport = paramiko.Transport((files_hostname, ssh_port))
-        transport.connect(username=username, password=password)
+        transport = paramiko.Transport((config.files_hostname, config.ssh_port))
+        transport.connect(username=config.username, password=config.password)
         sftp = paramiko.SFTPClient.from_transport(transport)
         print("Connection succesfully established ... ")
         sftp.put(backup_path + zip_archive, backup_path + zip_archive)
@@ -139,7 +137,7 @@ def rotate_remote():
     """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=files_hostname, username=username, password=password)
+    ssh.connect(hostname=config.files_hostname, username=config.username, password=config.password)
     ssh.exec_command("find " + backup_path + ". -type f +" + rotation_time + " -delete")
     print('Remote backup rotation successful ...')
     ssh.close()
@@ -157,13 +155,13 @@ def aws_backup():
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key
+        aws_access_key_id=config.aws_access_key_id,
+        aws_secret_access_key=config.aws_secret_access_key
     )
     # Upload object
     try:
         # Creating a bucket
-        s3_client.create_bucket(Bucket=aws_bucket_name)
+        s3_client.create_bucket(Bucket=config.aws_bucket_name)
         print("Bucket created succesfully")
         print('Uploading object ...')
         """
@@ -175,7 +173,7 @@ def aws_backup():
         with tqdm.tqdm(total=file_size, unit="B", unit_scale=True, desc=zip_archive) as pbar:
             s3_client.upload_file(
                 backup_path + zip_archive,
-                aws_bucket_name,
+                config.aws_bucket_name,
                 zip_archive,
                 Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
             )
@@ -223,8 +221,8 @@ def restore_from_local():
     file_to_restore = backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    transport = paramiko.Transport((restore_hostname, ssh_port))
-    transport.connect(username=username, password=password)
+    transport = paramiko.Transport((config.restore_hostname, config.ssh_port))
+    transport.connect(username=config.username, password=config.password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
     sftp.put(backup_path + file_to_restore, wordpress_path + file_to_restore)
@@ -234,7 +232,7 @@ def restore_from_local():
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.connect(hostname=config.restore_hostname, username=config.username, password=config.password)
     ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
     os.system("sleep 5")
     print('File extraction successful')
@@ -251,7 +249,7 @@ def restore_from_remote():
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=files_hostname, username=username, password=password)
+    ssh.connect(hostname=config.files_hostname, username=config.username, password=config.password)
     sftp = ssh.open_sftp()
 
     sftp.chdir(backup_path)
@@ -262,7 +260,6 @@ def restore_from_remote():
 
     backups = os.listdir("/home/philippe/P6")
     filtered_backups = [backup for backup in backups if backup.startswith("2021")]
-    # print(filtered_backups)
     print("""\033[96m
             Quelle sauvegarde choisissez-vous ?
             \033[0m
@@ -277,8 +274,8 @@ def restore_from_remote():
     file_to_restore = filtered_backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    transport = paramiko.Transport((restore_hostname, ssh_port))
-    transport.connect(username=username, password=password)
+    transport = paramiko.Transport((config.restore_hostname, config.ssh_port))
+    transport.connect(username=config.username, password=config.password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
     sftp.put("/home/philippe/P6/" + file_to_restore, wordpress_path + file_to_restore)
@@ -288,16 +285,15 @@ def restore_from_remote():
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.connect(hostname=config.restore_hostname, username=config.username, password=config.password)
     ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
     os.system("sleep 5")
     print('File extraction successful')
-    ssh.exec_command("rm /var/www/html/" + file_to_restore)
-    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    ssh.exec_command("rm " + wordpress_path + file_to_restore)
+    ssh.exec_command("sudo mysql --user=" + config.username + " --password=" + config.password + " wordpress_db < dump.sql")
     os.system("sleep 3")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
     ssh.close()
-
     os.system("rm -f 2021*")
 
 def restore_from_aws():
@@ -306,8 +302,8 @@ def restore_from_aws():
     """
     s3_client = boto3.client(
         's3',
-        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
-        aws_secret_access_key="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"
+        aws_access_key_id=config.aws_access_key_id,
+        aws_secret_access_key=config.aws_secret_access_key
     )
     print("""\033[96m
         Quelle sauvegarde choisissez-vous ?
@@ -323,10 +319,10 @@ def restore_from_aws():
     file_to_restore = s3_objects[int(backup_choice) - 1]['Key']
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    s3_client.download_file(aws_bucket_name, file_to_restore, file_to_restore)
+    s3_client.download_file(config.aws_bucket_name, file_to_restore, file_to_restore)
 
-    transport = paramiko.Transport((restore_hostname, ssh_port))
-    transport.connect(username=username, password=password)
+    transport = paramiko.Transport((config.restore_hostname, config.ssh_port))
+    transport.connect(username=config.username, password=config.password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
     sftp.put("/home/philippe/P6/" + file_to_restore, wordpress_path + file_to_restore)
@@ -336,16 +332,15 @@ def restore_from_aws():
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.connect(hostname=config.restore_hostname, username=config.username, password=config.password)
     ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
     os.system("sleep 5")
     print('File extraction successful')
     ssh.exec_command("rm /var/www/html/" + file_to_restore)
-    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    ssh.exec_command("sudo mysql --user=" + config.username + " --password=" + config.password + " wordpress_db < dump.sql")
     os.system("sleep 3")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
     ssh.close()
-
     os.system("rm -f 2021*")
 
 # Affichage du menu
@@ -353,7 +348,7 @@ def menu():
     """
         Fonction permettant d'afficher le menu'
     """
-    print (banner() + """\033[96m
+    print(banner() + """\033[96m
  [*] Manage your backup [*]
    [1]--Local ONLY (first rule)
    [2]--Remote ONLY (second rule)
@@ -376,24 +371,31 @@ menu()
 choice = input(show_input())
 
 if choice == "1":
+    print("Début de la sauvegarde locale")
     local_backup()
     rotate()
 elif choice == "2":
+    print("Début de la sauvegarde sur site distant")
     local_backup()
     remote_backup()
     rotate_remote()
     del_backup(zip_archive)
 elif choice == "3":
+    print("Début de la sauvegarde sur AWS")
     local_backup()
     aws_backup()
     del_backup(zip_archive)
 elif choice == "4":
+    print("Début de la règle 3-2-1")
     three_rules()
 elif choice == "5":
+    print("Début de la restauration depuis la machine locale")
     restore_from_local()
 elif choice == "6":
+    print("Début de la restauration depuis la machine distante")
     restore_from_remote()
 elif choice == "7":
+    print("Début de la restauration depuis AWS")
     restore_from_aws()
 elif choice == "0":
     os.system('clear'), sys.exit()

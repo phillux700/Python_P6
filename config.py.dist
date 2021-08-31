@@ -1,0 +1,8 @@
+username = ''
+password = ''
+files_hostname = ''
+restore_hostname = ''
+ssh_port = 22
+aws_access_key_id = ""
+aws_secret_access_key = ""
+aws_bucket_name = ''
