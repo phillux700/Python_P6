@@ -51,7 +51,6 @@ username = 'philippe'
 password = 'password'
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
-# archive_db = todays_date + database_name + ".sql"
 archive_db = "dump.sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 rotation_time = '60'        # 1 week = 10080, 1 day = 1440
@@ -303,8 +302,10 @@ def restore_from_aws():
         aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
         aws_secret_access_key="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"
     )
+    number = 0
     for key in s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']:
-        print(key['Key'])
+        number = number + 1
+        print(str(number) + ". " + key['Key'])
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 
