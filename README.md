@@ -19,7 +19,7 @@ git clone https://github.com/sergisergio/P6.git
 ```bash
 python3 main.py
 ```
-![Menu]()
+![Menu](https://github.com/sergisergio/P6/blob/main/images/menu.png?raw=true)
 
 ## Quelques exemples
 
