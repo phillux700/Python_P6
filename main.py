@@ -41,6 +41,7 @@ https://www.python.org/dev/peps/pep-0257/
 
 # --- Variables --- #
 backup_path = '/home/philippe/P6/backup/'
+wordpress_path = "/var/www/html/"
 source_directory = '/var/www/wordpress'
 todays_date = (time.strftime("%Y%m%d_%HH%M"))
 free_space_needed = 1000000
@@ -54,6 +55,14 @@ zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = "dump.sql"
 archive_db_path = target_dir + todays_date + database_name + ".sql"
 rotation_time = '60'        # 1 week = 10080, 1 day = 1440
+
+files_hostname = '192.168.2.2'
+restore_hostname = '192.168.1.4'
+ssh_port = 22
+
+aws_access_key_id = "AKIA45Z5NIQTRLHR3RBA"
+aws_secret_access_key = "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"
+aws_bucket_name = 'p6-eu-west-1-bucket'
 
 def banner():
     """
@@ -106,12 +115,11 @@ def remote_backup():
         https://blog.ruanbekker.com/blog/2018/04/23/using-paramiko-module-in-python-to-execute-remote-bash-commands/
     """
     try:
-        transport = paramiko.Transport(("192.168.2.2", 22))
-        transport.connect(username = username, password =password)
+        transport = paramiko.Transport((files_hostname, ssh_port))
+        transport.connect(username=username, password=password)
         sftp = paramiko.SFTPClient.from_transport(transport)
         print("Connection succesfully established ... ")
-        path = "/home/philippe/P6/backup/"
-        sftp.put("/home/philippe/P6/backup/" + zip_archive, path + zip_archive)
+        sftp.put(backup_path + zip_archive, backup_path + zip_archive)
         sftp.close()
         transport.close()
         print('Remote backup successful ...')
@@ -132,8 +140,8 @@ def rotate_remote():
     """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname='192.168.2.2', username=username, password=password)
-    ssh.exec_command("find /home/philippe/P6/backup/. -type f +" + rotation_time + " -delete")
+    ssh.connect(hostname=files_hostname, username=username, password=password)
+    ssh.exec_command("find " + backup_path + ". -type f +" + rotation_time + " -delete")
     print('Remote backup rotation successful ...')
     ssh.close()
 
@@ -150,13 +158,13 @@ def aws_backup():
     # Create an S3 Client
     s3_client = boto3.client(
         's3',
-        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
-        aws_secret_access_key="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"
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
     )
     # Upload object
     try:
         # Creating a bucket
-        s3_client.create_bucket(Bucket='p6-eu-west-1-bucket')
+        s3_client.create_bucket(Bucket=aws_bucket_name)
         print("Bucket created succesfully")
         print('Uploading object ...')
         """
@@ -164,11 +172,11 @@ def aws_backup():
 
             From https://alexwlchan.net/2021/04/s3-progress-bars/
         """
-        file_size = os.stat("/home/philippe/P6/backup/" + zip_archive).st_size
+        file_size = os.stat(backup_path + zip_archive).st_size
         with tqdm.tqdm(total=file_size, unit="B", unit_scale=True, desc=zip_archive) as pbar:
             s3_client.upload_file(
-                "/home/philippe/P6/backup/" + zip_archive,
-                'p6-eu-west-1-bucket',
+                backup_path + zip_archive,
+                aws_bucket_name,
                 zip_archive,
                 Callback=lambda bytes_transferred: pbar.update(bytes_transferred),
             )
@@ -216,22 +224,22 @@ def restore_from_local():
     file_to_restore = backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    transport = paramiko.Transport(("192.168.1.4", 22))
+    transport = paramiko.Transport((restore_hostname, ssh_port))
     transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
-    sftp.put("/home/philippe/P6/backup/" + file_to_restore, "/var/www/html/" + file_to_restore)
+    sftp.put(backup_path + file_to_restore, wordpress_path + file_to_restore)
     sftp.close()
     transport.close()
     print('File has been sent ...')
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
+    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
     os.system("sleep 5")
     print('File extraction successful')
-    ssh.exec_command("rm /var/www/html/" + file_to_restore)
+    ssh.exec_command("rm " + wordpress_path + file_to_restore)
     ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
     os.system("sleep 3")
     ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
@@ -244,10 +252,10 @@ def restore_from_remote():
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname='192.168.2.2', username=username, password=password)
+    ssh.connect(hostname=files_hostname, username=username, password=password)
     sftp = ssh.open_sftp()
 
-    sftp.chdir('/home/philippe/P6/backup')
+    sftp.chdir(backup_path)
     for filename in sorted(sftp.listdir()):
         if filename.startswith('202'):
             sftp.get(filename, filename)
@@ -270,19 +278,19 @@ def restore_from_remote():
     file_to_restore = filtered_backups[int(backup_choice) - 1]
     print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    transport = paramiko.Transport(("192.168.1.4", 22))
+    transport = paramiko.Transport((restore_hostname, ssh_port))
     transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
     print("Connection succesfully established ... ")
-    sftp.put("/home/philippe/P6/" + file_to_restore, "/var/www/html/" + file_to_restore)
+    sftp.put("/home/philippe/P6/" + file_to_restore, wordpress_path + file_to_restore)
     sftp.close()
     transport.close()
     print('File has been sent ...')
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname='192.168.1.4', username=username, password=password)
-    ssh.exec_command("tar -xzvf /var/www/html/" + file_to_restore + " -C /var/www/html/")
+    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
     os.system("sleep 5")
     print('File extraction successful')
     ssh.exec_command("rm /var/www/html/" + file_to_restore)
@@ -299,22 +307,43 @@ def restore_from_aws():
     """
     s3_client = boto3.client(
         's3',
-        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
-        aws_secret_access_key="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"
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_access_key_id
     )
     number = 0
-    s3_objects = s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']
+    s3_objects = s3_client.list_objects(Bucket=aws_bucket_name)['Contents']
     for key in s3_objects:
         number = number + 1
         print(str(number) + ". " + key['Key'])
 
     backup_choice = input(show_input())
     file_to_restore = s3_objects[int(backup_choice) - 1]['Key']
-    print(file_to_restore)
+    print("Vous avez choisi la sauvegarde " + file_to_restore)
 
-    s3_client.download_file('p6-eu-west-1-bucket', file_to_restore, file_to_restore)
-    #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
+    s3_client.download_file(aws_bucket_name, file_to_restore, file_to_restore)
 
+    transport = paramiko.Transport((restore_hostname, ssh_port))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    print("Connection succesfully established ... ")
+    sftp.put("/home/philippe/P6/" + file_to_restore, wordpress_path + file_to_restore)
+    sftp.close()
+    transport.close()
+    print('File has been sent ...')
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=restore_hostname, username=username, password=password)
+    ssh.exec_command("tar -xzvf " + wordpress_path + file_to_restore + " -C " + wordpress_path)
+    os.system("sleep 5")
+    print('File extraction successful')
+    ssh.exec_command("rm /var/www/html/" + file_to_restore)
+    ssh.exec_command("sudo mysql --user=philippe --password=password wordpress_db < dump.sql")
+    os.system("sleep 3")
+    ssh.exec_command("cd /var/www/html/20* && mv * /var/www/html")
+    ssh.close()
+
+    os.system("rm -f 2021*")
 
 # Affichage du menu
 def menu():
