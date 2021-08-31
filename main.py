@@ -303,9 +303,14 @@ def restore_from_aws():
         aws_secret_access_key="E2uARNz+LuBzCnQDAV7l25PgDDn9A7GBrQBJfD06"
     )
     number = 0
-    for key in s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']:
+    s3_objects = s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']
+    for key in s3_objects:
         number = number + 1
         print(str(number) + ". " + key['Key'])
+
+    backup_choice = input(show_input())
+    file_to_restore = s3_objects[int(backup_choice) - 1]
+    print(file_to_restore)
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
 
