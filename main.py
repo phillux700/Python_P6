@@ -47,19 +47,11 @@ todays_date = (time.strftime("%Y%m%d_%HH%M"))
 free_space_needed = 1000000  # 1 Go
 backup_site_name = 'wordpress'
 database_name = 'wordpress_db'
-#username = 'philippe'
-#password = 'password'
 archive = todays_date + "_" + backup_site_name + ".tar "
 zip_archive = todays_date + "_" + backup_site_name + ".tar.gz"
 archive_db = "dump.sql"
 archive_db_path = backup_path + todays_date + database_name + ".sql"
 rotation_time = '1440'  # 1 week = 10080, 1 day = 1440
-#files_hostname = '192.168.2.2'
-#restore_hostname = '192.168.1.4'
-#ssh_port = 22
-#aws_access_key_id = "AKIA45Z5NIQTRLHR3RBA"
-#aws_secret_access_key = "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"
-#aws_bucket_name = 'p6-eu-west-1-bucket'
 
 def banner():
     """
