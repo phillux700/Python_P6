@@ -309,7 +309,7 @@ def restore_from_aws():
         print(str(number) + ". " + key['Key'])
 
     backup_choice = input(show_input())
-    file_to_restore = s3_objects[int(backup_choice) - 1]
+    file_to_restore = s3_objects[int(backup_choice) - 1]['Key']
     print(file_to_restore)
     #### TODO Afficher liste des fichiers avec une boucle et saisir le choix (exemple: choix = input('Saisissez le choix')
 
