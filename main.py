@@ -21,7 +21,6 @@ import paramiko
 import boto3
 import botocore
 import tqdm
-import fnmatch
 
 """############### DOCUMENTATION ####################
 https://docs.python.org/fr/3/library/os.html
@@ -307,8 +306,8 @@ def restore_from_aws():
     """
     s3_client = boto3.client(
         's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_access_key_id
+        aws_access_key_id="AKIA45Z5NIQTRLHR3RBA",
+        aws_secret_access_key="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"
     )
     number = 0
     s3_objects = s3_client.list_objects(Bucket='p6-eu-west-1-bucket')['Contents']
