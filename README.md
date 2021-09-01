@@ -44,13 +44,13 @@ python3 main.py
 
 ## Résumé
 
-* 1. Sauvegarde sur serveur local et rotation
-* 2. Sauvegarde sur serveur distant et rotation
-* 3. Sauvegarde sur AWS (rotation automatique via la console AWS)
-* 4. Les 3 précédentes en simultané
-* 5. Restauration à partir d'une sauvegarde du site local
-* 6. Restauration à partir d'une sauvegarde du site distant
-* 7. Restauration à partir d'une sauvegarde du bucket S3 d'AWS    
+* 1 . Sauvegarde sur serveur local et rotation
+* 2 . Sauvegarde sur serveur distant et rotation
+* 3 . Sauvegarde sur AWS (rotation automatique via la console AWS)
+* 4 . Les 3 précédentes en simultané
+* 5 . Restauration à partir d'une sauvegarde du site local
+* 6 . Restauration à partir d'une sauvegarde du site distant
+* 7 . Restauration à partir d'une sauvegarde du bucket S3 d'AWS    
     
 NB: Pour les restaurations, une liste apparaît: il vous suffira de choisir quelle sauvegarde vous souhaitez.
  
