@@ -133,6 +133,7 @@ def rotate_remote():
     ssh.exec_command("find " + backup_path + ". -type f +" + rotation_time + " -delete")
     print('Remote backup rotation successful ...')
     ssh.close()
+    ## TODO A vérifier
 
 def aws_backup():
     """
@@ -145,11 +146,15 @@ def aws_backup():
         NB: Une configuration de cycle de vie a directement été créée dans le bucket pour supprimer les objets après 7 jours.
     """
     # Create an S3 Client
-    s3_client = boto3.client(
-        's3',
-        aws_access_key_id=config.aws_access_key_id,
-        aws_secret_access_key=config.aws_secret_access_key
-    )
+    try:
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=config.aws_access_key_id,
+            aws_secret_access_key=config.aws_secret_access_key
+        )
+    except:
+        print('pb de connexion')
+
     # Upload object
     try:
         # Creating a bucket
