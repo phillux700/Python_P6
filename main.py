@@ -125,7 +125,7 @@ def remote_backup():
 
 def rotate_remote():
     """
-        Fonction permettant de faire une sauvegarde sur le serveur distant
+        Fonction permettant de faire une rotation sur le serveur distant
     """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -133,7 +133,6 @@ def rotate_remote():
     ssh.exec_command("find " + backup_path + ". -type f +" + rotation_time + " -delete")
     print('Remote backup rotation successful ...')
     ssh.close()
-    ## TODO A vérifier
 
 def aws_backup():
     """

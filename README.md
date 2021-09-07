@@ -57,4 +57,4 @@ NB: Pour les restaurations, une liste apparaît: il vous suffira de choisir quel
 ![List](https://github.com/sergisergio/P6/blob/main/images/list.png?raw=true)
 
 ## Licence
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/sergisergio/P6/blob/main/LICENSE)
